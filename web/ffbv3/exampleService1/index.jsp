@@ -4,7 +4,7 @@
     Author     : Eri Fizal
 --%>
 
-<%@page import="com.fz.ffbv3.exampleService1.ExampleService1"%>
+<%@page import="com.fz.ffbv3.service.exampleService1.ExampleService1"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
