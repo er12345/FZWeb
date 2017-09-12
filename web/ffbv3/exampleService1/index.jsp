@@ -1,7 +1,6 @@
 <%-- 
     Document   : index
     Created on : Sep 12, 2017, 3:04:15 PM
-    Author     : Eri Fizal
 --%>
 
 <%@page import="com.fz.ffbv3.service.exampleService1.ExampleService1"%>
