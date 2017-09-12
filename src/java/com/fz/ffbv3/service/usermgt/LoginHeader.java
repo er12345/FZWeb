@@ -18,6 +18,6 @@ public class LoginHeader {
             HttpServletRequest request
             , HttpServletResponse response
     ) throws Exception {
-        // nothing
+        // nothing for now
     }
 }

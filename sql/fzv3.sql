@@ -1,3 +1,5 @@
+drop table if exists fbblock;
+
 CREATE TABLE fbblock
 (
    blockID varchar(255),
@@ -8,6 +10,9 @@ CREATE TABLE fbblock
    y2 double
 )
 ;
+
+drop table if exists fbDefinedPath;
+
 CREATE TABLE fbdefinedpath
 (
    fromID varchar(255),
@@ -22,6 +27,9 @@ CREATE TABLE fbdefinedpath
    distMtr double
 )
 ;
+
+drop table if exists fbDiv;
+
 CREATE TABLE fbdiv
 (
    divID varchar(255),
@@ -29,6 +37,9 @@ CREATE TABLE fbdiv
    millID varchar(255)
 )
 ;
+
+drop table if exists fbMill;
+
 CREATE TABLE fbmill
 (
    millID varchar(255),
@@ -36,6 +47,9 @@ CREATE TABLE fbmill
    lat double
 )
 ;
+
+drop table if exists fbProgress;
+
 CREATE TABLE fbprogress
 (
    runID varchar(255),
@@ -50,6 +64,8 @@ CREATE TABLE fbprogress
    created timestamp DEFAULT 0000-00-00 00:00:00 NOT NULL
 )
 ;
+drop table if exists fbRoadSegment;
+
 CREATE TABLE fbroadsegment
 (
    roadID varchar(255),
@@ -61,6 +77,8 @@ CREATE TABLE fbroadsegment
    distMtr double
 )
 ;
+drop table if exists fbSol;
+
 CREATE TABLE fbsol
 (
    runID varchar(255),
@@ -74,6 +92,9 @@ CREATE TABLE fbsol
    lastUpd timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 )
 ;
+
+drop table if exists fbTask;
+
 CREATE TABLE fbtask
 (
    runID varchar(255),
@@ -98,6 +119,9 @@ CREATE TABLE fbtask
    status varchar(255)
 )
 ;
+
+drop table if exists fbTaskPlan;
+
 create table fbTaskPlan (
 recordID int not null AUTO_INCREMENT
 , taskDate datetime
@@ -113,6 +137,9 @@ recordID int not null AUTO_INCREMENT
 , primary key (recordID)
 )
 ;
+
+drop table if exists fbTaskExec;
+
 create table fbTaskExec (
 recordID int not null AUTO_INCREMENT
 , planID int
@@ -130,6 +157,32 @@ recordID int not null AUTO_INCREMENT
 , primary key (recordID)
 )
 ;
+
+drop table if exists gbRole;
+
+create table gbRole 
+(
+	roleID varchar(255)
+	, roleName varchar(255)
+	, appID varchar(255)
+	, createDt timestamp default current_timestamp
+	, updDt timestamp default current_timestamp on update current_timestamp
+)
+;
+
+drop table if exists gbUserRole;
+
+create table gbUserRole
+(
+	userID varchar(255)
+	, roleID varchar(255)
+	, createDt timestamp default current_timestamp
+	, updDt timestamp default current_timestamp on update current_timestamp
+)
+;
+
+----------------------------------------------------------
+
 INSERT INTO fbblock (blockID,divID,x1,y1,x2,y2) VALUES ('L34','BINE1',105.5104269,-1.873264593,105.5104269,-1.873264593);
 INSERT INTO fbblock (blockID,divID,x1,y1,x2,y2) VALUES ('L34','BINE1',105.5090763,-1.872757304,105.5090763,-1.872757304);
 INSERT INTO fbblock (blockID,divID,x1,y1,x2,y2) VALUES ('L34','BINE1',105.5101919,-1.876393097,105.5101919,-1.876393097);

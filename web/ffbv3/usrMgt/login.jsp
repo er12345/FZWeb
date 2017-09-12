@@ -1,35 +1,30 @@
-<%-- 
-    Document   : login
-    Created on : Sep 12, 2017, 6:23:48 PM
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="../appGlobal/pageTop.jsp"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <%@include file="../generic/header.jsp"%>
+        <title>Login</title>
     </head>
     <body>
-        <%@include file="../generic/bodytop.jsp"%>
-        <%(new com.fz.ffbv3.service.usermgt.LoginHeader()).run(request,response);%>
+        <%@include file="../appGlobal/bodyTop.jsp"%>
         <h2>Login</h2>
         <br>
         <br>
-        <form class="w3-container" action="loginProcess.jsp">
+        <form class="w3-container" action="loginProcess.jsp" method="post">
 
-            <div class="fzerrmsg">
-                <%=com.fz.util.FZUtil.getAttr(request, "loginResult")%>
+            <div class="fzErrMsg">
+                <%=get("loginResult")%>
             </div>
             <br>
-            <label class="fzlabel">User ID</label>
-            <input class="fzinput" type="text" id="userID" name="userID">
+            <label class="fzLabel">User ID</label>
+            <input class="fzInput" type="text" id="userID" name="userID">
             <br>
-            <label class="fzlabel">Password</label>
-            <input class="fzinput" type="password" id="password" name="password">
+            <label class="fzLabel">Password</label>
+            <input class="fzInput" type="password" id="password" name="password">
             <br>
-            <button class="fzbutton" type="submit">GO</button>
+            <button class="fzButton" type="submit">GO</button>
         </form>         
+        <%@include file="../appGlobal/bodyBottom.jsp"%>
     </body>
 </html>

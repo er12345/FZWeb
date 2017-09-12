@@ -10,6 +10,7 @@ import com.fz.generic.Db;
 import com.fz.util.FZUtil;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,37 +23,58 @@ public class LoginProcess {
             , HttpServletResponse response
     ) throws Exception {
         
-        Db db = new Db();
-        Connection con = db.getConnection("jdbc/fz");
+        String sql = "";
         
-        String userID = FZUtil.getHttpParam(request, "userID");
-        String password = FZUtil.getHttpParam(request, "password");
-        
-        // TODO hash the password
-        String sql = "select userName from gbUsr"
-                + " where userID ='" + userID + "'"
-                + " and password ='" + password + "'"
-                ;
-        ResultSet rs = con.createStatement().executeQuery(sql);
-        if (rs.next()){
-        
-            // keep user profile
-            request.getSession().setAttribute("userName", rs.getString(1));
-            request.getSession().setAttribute("userID", userID);
-            rs.close();
+        // get db con from pool
+        try (Connection con = (new Db()).getConnection("jdbc/fz")){
             
-            // redirect to welcome page
-            request.getRequestDispatcher("/main/main.jsp")
-                    .forward(request, response);
+            try (Statement stm = con.createStatement()){
+            
+                // get user id and password from http param
+                String userID = FZUtil.getHttpParam(request, "userID");
+                String password = FZUtil.getHttpParam(request, "password");
+                
+                // create sql
+                sql = "select userName from gbUsr"
+                        + " where userID ='" + userID + "'"
+                        + " and password ='" + password + "'"
+                        ;
+                
+                // query
+                try (ResultSet rs = stm.executeQuery(sql)){
+                    
+                    // if record exist
+                    if (rs.next()){
+
+                        // keep user profile for next view
+                        request.getSession()
+                                .setAttribute("userName", rs.getString(1));
+                        request.getSession()
+                                .setAttribute("userID", userID);
+                        
+                        // redirect to welcome page
+                        request.getRequestDispatcher("/main/main.jsp")
+                                .forward(request, response);
+                    }
+                    else {
+
+                        // keep login msg to display in login page
+                        request
+                                .setAttribute("loginResult"
+                                        , "Invalid user name or password");
+                        
+                        // redirect back to login page
+                        request.getRequestDispatcher("login.jsp")
+                                .forward(request, response);
+                    }
+                }
+            }
         }
-        else {
+        catch (Exception e){
             
-            rs.close();
-            
-            // redirect back to login page
-            request.setAttribute("loginResult", "Invalid user name or password");
-            request.getRequestDispatcher("login.jsp")
-                    .forward(request, response);
+            // re-throw the exception
+            throw new Exception("Error login. SQL = " + sql, e);
         }
+
     }
 }
