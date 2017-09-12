@@ -9,7 +9,6 @@ import java.sql.Connection;
 
 /**
  *
- * @author Eri Fizal
  */
 public class Db {
     

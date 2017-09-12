@@ -20,7 +20,6 @@ import org.json.JSONObject;
 /**
  * REST Web Service
  *
- * @author Eri Fizal
  */
 @Path("apiSamplePath")
 public class APISample {

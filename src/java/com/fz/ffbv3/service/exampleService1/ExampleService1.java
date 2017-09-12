@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 
 /**
  *
- * @author Eri Fizal
  */
 public class ExampleService1 {
 
