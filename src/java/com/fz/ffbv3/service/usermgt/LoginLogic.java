@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  */
-public class LoginProcess {
+public class LoginLogic {
     public void run(
             HttpServletRequest request
             , HttpServletResponse response
@@ -35,6 +35,7 @@ public class LoginProcess {
                 String password = FZUtil.getHttpParam(request, "password");
                 
                 // create sql
+                // TODO: hash the password in prod
                 sql = "select userName from gbUsr"
                         + " where userID ='" + userID + "'"
                         + " and password ='" + password + "'"

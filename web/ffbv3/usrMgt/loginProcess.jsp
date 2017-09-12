@@ -1,1 +1,1 @@
-<%(new com.fz.ffbv3.service.usermgt.LoginProcess()).run(request,response);%>
+<%(new com.fz.ffbv3.service.usermgt.LoginLogic()).run(request,response);%>
