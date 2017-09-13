@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -460,15 +461,17 @@ public class FZUtil {
         return r;
     }
 
-    public static String getHttpParam(HttpServletRequest request, String paramName) throws Exception {
-        String x = request.getParameter(paramName);
+    public static String getHttpParam(PageContext pc, String paramName) 
+            throws Exception {
+        String x = pc.getRequest().getParameter(paramName);
         if (x == null) return "";
         return x;
         
     }
 
-    public static String getAttr(HttpServletRequest request, String paramName) throws Exception {
-        String x = (String) request.getAttribute(paramName);
+    public static String getAttr(PageContext pc, String paramName) 
+            throws Exception {
+        String x = (String) pc.getRequest().getAttribute(paramName);
         if (x == null) return "";
         return x;
         

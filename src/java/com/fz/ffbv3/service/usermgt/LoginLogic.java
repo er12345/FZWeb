@@ -6,22 +6,22 @@
 
 package com.fz.ffbv3.service.usermgt;
 
+import com.fz.generic.BusinessLogic;
 import com.fz.generic.Db;
 import com.fz.util.FZUtil;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 /**
  *
  */
-public class LoginLogic {
-    public void run(
-            HttpServletRequest request
-            , HttpServletResponse response
-    ) throws Exception {
+public class LoginLogic implements BusinessLogic {
+    
+    @Override
+    public void run(javax.servlet.jsp.PageContext pc) throws Exception {
         
         String sql = "";
         
@@ -31,14 +31,15 @@ public class LoginLogic {
             try (Statement stm = con.createStatement()){
             
                 // get user id and password from http param
-                String userID = FZUtil.getHttpParam(request, "userID");
-                String password = FZUtil.getHttpParam(request, "password");
+                String userID = FZUtil.getHttpParam(pc, "userID");
+                String password = FZUtil.getHttpParam(pc, "password");
                 
                 // create sql
                 // TODO: hash the password in prod
                 sql = "select userName from gbUsr"
                         + " where userID ='" + userID + "'"
                         + " and password ='" + password + "'"
+                        //+ " and password ='" + password.hashCode() + "'"
                         ;
                 
                 // query
@@ -47,26 +48,27 @@ public class LoginLogic {
                     // if record exist
                     if (rs.next()){
 
-                        // keep user profile for next view
-                        request.getSession()
+                        // keep user profile as session object, for next views
+                        pc.getSession()
                                 .setAttribute("userName", rs.getString(1));
-                        request.getSession()
+                        pc.getSession()
                                 .setAttribute("userID", userID);
                         
-                        // go to welcome page
-                        request.getRequestDispatcher("/main/main.jsp")
-                                .forward(request, response);
+                        // redirect to welcome page
+                        ((HttpServletResponse) pc.getResponse())
+                                .sendRedirect("/main/main.jsp");
                     }
                     else {
 
                         // keep login msg to display in login page
-                        request
+                        pc.getRequest()
                                 .setAttribute("loginResult"
                                         , "Invalid user name or password");
                         
-                        // go back to login page
-                        request.getRequestDispatcher("login.jsp")
-                                .forward(request, response);
+                        // forward to login page to display loginResult
+                        pc.getRequest()
+                                .getRequestDispatcher("login.jsp")
+                                .forward(pc.getRequest(), pc.getResponse());
                     }
                 }
             }
@@ -78,4 +80,5 @@ public class LoginLogic {
         }
 
     }
+
 }

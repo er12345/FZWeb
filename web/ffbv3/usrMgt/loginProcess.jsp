@@ -1,1 +1,2 @@
-<%(new com.fz.ffbv3.service.usermgt.LoginLogic()).run(request,response);%>
+<%@include file="../appGlobal/pageTop.jsp"%>
+<%run(new com.fz.ffbv3.service.usermgt.LoginLogic());%>
