@@ -134,6 +134,7 @@ recordID int not null AUTO_INCREMENT
 , runID varchar(255)
 , createDt timestamp default CURRENT_TIMESTAMP
 , updDt timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
+, version int
 , primary key (recordID)
 )
 ;
