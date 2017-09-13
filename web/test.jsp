@@ -11,6 +11,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello Ignat!</h1>
+        <h1>Hello Heru!</h1>
     </body>
 </html>
