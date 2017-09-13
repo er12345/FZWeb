@@ -35,10 +35,10 @@ public class LoginLogic implements BusinessLogic {
                 String password = FZUtil.getHttpParam(pc, "password");
                 
                 // create sql
-                // TODO: hash the password in prod
                 sql = "select userName from gbUsr"
                         + " where userID ='" + userID + "'"
                         + " and password ='" + password + "'"
+                        // TODO: hash the password in prod
                         //+ " and password ='" + password.hashCode() + "'"
                         ;
                 
@@ -54,9 +54,14 @@ public class LoginLogic implements BusinessLogic {
                         pc.getSession()
                                 .setAttribute("userID", userID);
                         
-                        // redirect to welcome page
-                        ((HttpServletResponse) pc.getResponse())
-                                .sendRedirect("/main/main.jsp");
+                        // remove password from request
+                        // so not carried all the time
+                        pc.getRequest().removeAttribute("password");
+                        
+                        // go to welcome page
+                        pc.getRequest()
+                                .getRequestDispatcher("../main/main.jsp")
+                                .forward(pc.getRequest(), pc.getResponse());
                     }
                     else {
 

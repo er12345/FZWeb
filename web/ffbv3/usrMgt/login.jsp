@@ -11,7 +11,7 @@
         <h2>Login</h2>
         <br>
         <br>
-        <form class="w3-container" action="loginProcess.jsp" method="post">
+        <form class="w3-container" action="entry.jsp" method="post">
 
             <div class="fzErrMsg">
                 <%=get("loginResult")%>
