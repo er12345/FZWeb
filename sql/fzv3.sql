@@ -1,3 +1,7 @@
+-- create database IF NOT EXISTS fz
+
+-- use fz 
+
 drop table if exists fbblock;
 
 CREATE TABLE fbblock
@@ -61,7 +65,7 @@ CREATE TABLE fbprogress
    msg longtext,
    pct tinyint,
    lastUpd timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-   created timestamp DEFAULT 0000-00-00 00:00:00 NOT NULL
+   created timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
 )
 ;
 drop table if exists fbRoadSegment;
@@ -89,7 +93,7 @@ CREATE TABLE fbsol
    lastJobEndClock varchar(5),
    vehicles int,
    recentTwist varchar(255),
-   lastUpd timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+   lastUpd timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )
 ;
 
@@ -115,7 +119,7 @@ CREATE TABLE fbtask
    lonMill double,
    latMill double,
    millName varchar(255),
-   lastUpd timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+   lastUpd timestamp DEFAULT CURRENT_TIMESTAMP  ON UPDATE CURRENT_TIMESTAMP,
    status varchar(255)
 )
 ;
@@ -161,6 +165,15 @@ recordID int not null AUTO_INCREMENT
 )
 ;
 
+drop table if exists gbUsr;
+
+CREATE TABLE gbUsr
+(
+   userID varchar(255),
+   password varchar(255),
+   userName varchar(255)
+)
+;
 drop table if exists gbRole;
 
 create table gbRole 
@@ -173,9 +186,9 @@ create table gbRole
 )
 ;
 
-drop table if exists gbUserRole;
+drop table if exists gbUsrRole;
 
-create table gbUserRole
+create table gbUsrRole
 (
 	userID varchar(255)
 	, roleID varchar(255)
@@ -1022,6 +1035,7 @@ INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,ar
 INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck5','BINE5_5','V35; V36',9000.0,844,869,31,902,927,934,105.5121556,-1.957520214,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
 INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck5','BINE5_6','V36',5344.0,935,960,30,992,1017,1024,105.5147514,-1.957464416,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
 
+--- app user ---- 
 INSERT INTO gbusr (userID,password,userName) VALUES ('user1','password','User 1');
 
 --- sample task ---
@@ -1031,3 +1045,9 @@ VALUES (0,{ts '2017-09-13 09:23:19.'},'BINE1',1,'N25;N26',11000,430,'Truck1','MR
 INSERT INTO fbtaskexec (planID,taskDate,divID,seq1,blocks,size1,time1,truckID,roadNames,runID,status,version) 
 VALUES (0,{ts '2017-09-13 09:23:19.'},'BINE1',1,'N27',12000,530,'Truck1','MR_N27','20170101_08080922'
 ,'NEW',1);
+
+
+--- db user ----
+CREATE USER IF NOT EXISTS 'user1'@'localhost' IDENTIFIED BY 'Yuser12345';
+
+GRANT ALL PRIVILEGES ON fz.* TO 'user1'@'localhost';
