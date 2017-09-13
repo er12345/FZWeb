@@ -44,6 +44,9 @@ public class APISample {
     public String getJson() {
         String sql = "";
         
+        // init resulting JSON 
+        JSONObject result = new JSONObject();
+        
         // get db con from pool
         try (Connection con = (new Db()).getConnection("jdbc/fz")){
             
@@ -54,9 +57,6 @@ public class APISample {
                 
                 // query
                 try (ResultSet rs = stm.executeQuery(sql)){
-                    
-                    // init resulting JSON 
-                    JSONObject result = new JSONObject();
                     
                     // if record exist
                     if (rs.next())
@@ -72,7 +72,7 @@ public class APISample {
         catch(Exception e){
             // do err handling
         }
-        return (new JSONObject()).toString();
+        return result.toString();
 
     }
 
