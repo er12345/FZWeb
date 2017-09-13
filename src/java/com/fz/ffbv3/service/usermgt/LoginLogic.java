@@ -53,7 +53,7 @@ public class LoginLogic {
                         request.getSession()
                                 .setAttribute("userID", userID);
                         
-                        // redirect to welcome page
+                        // go to welcome page
                         request.getRequestDispatcher("/main/main.jsp")
                                 .forward(request, response);
                     }
@@ -64,7 +64,7 @@ public class LoginLogic {
                                 .setAttribute("loginResult"
                                         , "Invalid user name or password");
                         
-                        // redirect back to login page
+                        // go back to login page
                         request.getRequestDispatcher("login.jsp")
                                 .forward(request, response);
                     }

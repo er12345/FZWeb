@@ -6,8 +6,10 @@
 package com.fz.ffbv3.api.exampleAPI;
 
 import com.fz.generic.Db;
+import com.fz.util.FZUtil;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -40,21 +42,38 @@ public class APISample {
     @GET
     @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
     public String getJson() {
-        try {
-            Db db = new Db();
-            Connection con = db.getConnection("jdbc/fz");
-            ResultSet rs = con.createStatement().executeQuery("select 1+1");
-            JSONObject result = new JSONObject();
-            if (rs.next())
-                result.append("result", rs.getString(1));
-            rs.close();
-            con.close();
-            return result.toString();
+        String sql = "";
+        
+        // get db con from pool
+        try (Connection con = (new Db()).getConnection("jdbc/fz")){
+            
+            try (Statement stm = con.createStatement()){
+            
+                // create sql
+                sql = "select 1+1" ;
+                
+                // query
+                try (ResultSet rs = stm.executeQuery(sql)){
+                    
+                    // init resulting JSON 
+                    JSONObject result = new JSONObject();
+                    
+                    // if record exist
+                    if (rs.next())
+                        
+                        // add to resulting json
+                        result.append("result", rs.getString(1));
+                    
+                    // return the JSON
+                    return result.toString();
+                }
+            }
         }
-        catch (Exception e){
-            // TODO:
-            return "[]";
+        catch(Exception e){
+            // do err handling
         }
+        return (new JSONObject()).toString();
+
     }
 
     /**
