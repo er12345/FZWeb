@@ -1023,3 +1023,11 @@ INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,ar
 INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck5','BINE5_6','V36',5344.0,935,960,30,992,1017,1024,105.5147514,-1.957464416,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
 
 INSERT INTO gbusr (userID,password,userName) VALUES ('user1','password','User 1');
+
+--- sample task ---
+INSERT INTO fbtaskexec (planID,taskDate,divID,seq1,blocks,size1,time1,truckID,roadNames,runID,status,version) 
+VALUES (0,{ts '2017-09-13 09:23:19.'},'BINE1',1,'N25;N26',11000,430,'Truck1','MR_N25_N26','20170101_08080922'
+,'DONE',1);
+INSERT INTO fbtaskexec (planID,taskDate,divID,seq1,blocks,size1,time1,truckID,roadNames,runID,status,version) 
+VALUES (0,{ts '2017-09-13 09:23:19.'},'BINE1',1,'N27',12000,530,'Truck1','MR_N27','20170101_08080922'
+,'NEW',1);
