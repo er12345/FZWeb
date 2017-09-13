@@ -23,7 +23,10 @@
     }
     
     public void run(com.fz.generic.BusinessLogic logic) throws Exception {
-        logic.run(pc);
+        logic.run(
+            (HttpServletRequest) pc.getRequest()
+            , (HttpServletResponse) pc.getResponse()
+            , pc);
     }
 %>
 <%

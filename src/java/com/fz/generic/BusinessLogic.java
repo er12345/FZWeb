@@ -6,12 +6,19 @@
 
 package com.fz.generic;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
+
 /**
  *
  */
 public interface BusinessLogic {
 
-    public abstract void run(javax.servlet.jsp.PageContext pc) 
+    public abstract void run(
+            HttpServletRequest request
+            , HttpServletResponse response
+            , PageContext pc) 
             throws Exception;
 
 }

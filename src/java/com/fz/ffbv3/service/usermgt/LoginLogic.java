@@ -12,7 +12,9 @@ import com.fz.util.FZUtil;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
 
 
 /**
@@ -21,7 +23,11 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginLogic implements BusinessLogic {
     
     @Override
-    public void run(javax.servlet.jsp.PageContext pc) throws Exception {
+    public void run(
+            HttpServletRequest request
+            , HttpServletResponse response
+            , PageContext pc
+    ) throws Exception {
         
         String sql = "";
         
@@ -31,8 +37,8 @@ public class LoginLogic implements BusinessLogic {
             try (Statement stm = con.createStatement()){
             
                 // get user id and password from http param
-                String userID = FZUtil.getHttpParam(pc, "userID");
-                String password = FZUtil.getHttpParam(pc, "password");
+                String userID = FZUtil.getHttpParam(request, "userID");
+                String password = FZUtil.getHttpParam(request, "password");
                 
                 // create sql
                 sql = "select userName from gbUsr"
@@ -49,29 +55,29 @@ public class LoginLogic implements BusinessLogic {
                     if (rs.next()){
 
                         // keep user profile as session object, for next views
-                        pc.getSession()
+                        request.getSession()
                                 .setAttribute("userName", rs.getString(1));
-                        pc.getSession()
+                        request.getSession()
                                 .setAttribute("userID", userID);
                         
                         // remove password from request
                         // so not carried all the time
-                        pc.getRequest().removeAttribute("password");
+                        request.removeAttribute("password");
                         
                         // go to welcome page
-                        pc.getRequest()
+                        request
                                 .getRequestDispatcher("../main/main.jsp")
                                 .forward(pc.getRequest(), pc.getResponse());
                     }
                     else {
 
                         // keep login msg to display in login page
-                        pc.getRequest()
+                        request
                                 .setAttribute("loginResult"
                                         , "Invalid user name or password");
                         
                         // forward to login page to display loginResult
-                        pc.getRequest()
+                        request
                                 .getRequestDispatcher("login.jsp")
                                 .forward(pc.getRequest(), pc.getResponse());
                     }

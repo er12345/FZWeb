@@ -461,17 +461,17 @@ public class FZUtil {
         return r;
     }
 
-    public static String getHttpParam(PageContext pc, String paramName) 
+    public static String getHttpParam(HttpServletRequest request, String paramName) 
             throws Exception {
-        String x = pc.getRequest().getParameter(paramName);
+        String x = request.getParameter(paramName);
         if (x == null) return "";
         return x;
         
     }
 
-    public static String getAttr(PageContext pc, String paramName) 
+    public static String getRequestAttr(HttpServletRequest request, String paramName) 
             throws Exception {
-        String x = (String) pc.getRequest().getAttribute(paramName);
+        String x = (String) request.getAttribute(paramName);
         if (x == null) return "";
         return x;
         
