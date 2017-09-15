@@ -124,46 +124,75 @@ CREATE TABLE fbtask
 )
 ;
 
-drop table if exists fbTaskPlan;
+drop table if exists fbHarvestEstmDoc;
 
-create table fbTaskPlan (
-recordID int not null AUTO_INCREMENT
-, taskDate datetime
-, divID varchar(255)
-, seq1 integer
-, blocks varchar(255)
-, size1 integer
-, time1 integer
-, truckID varchar(255)
-, runID varchar(255)
-, createDt timestamp default CURRENT_TIMESTAMP
-, updDt timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
-, version int
-, primary key (recordID)
-)
-;
+    create table fbHarvestEstmDoc (
+        HarvestEstmDocID int not null AUTO_INCREMENT
+        , planDate datetime
+        , status varchar(20) --taksasi, restan
+        , createBy varchar(255)
+        , createDt timestamp default CURRENT_TIMESTAMP
+        , lastUpd timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
+        , primary key (HarvestEstmDocID)
+    );
 
-drop table if exists fbTaskExec;
+drop table if exists fbHarvestEstmLine;
 
-create table fbTaskExec (
-recordID int not null AUTO_INCREMENT
-, planID int
-, taskDate datetime
-, divID varchar(255)
-, seq1 integer
-, blocks varchar(255)
-, size1 integer
-, time1 integer
-, truckID varchar(255)
-, roadNames varchar(255)
-, runID varchar(255)
-, createDt timestamp default CURRENT_TIMESTAMP
-, updDt timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
-, status varchar(20)
-, version int
-, primary key (recordID)
-)
-;
+    create table fbHarvestEstmLine (
+        HarvestEstmLineID int not null AUTO_INCREMENT
+        , status varchar(20) --del, act
+        , type1 varchar(20)
+        , divID varchar(255)
+        , seq1 integer
+        , blocks varchar(255)
+        , size1 integer
+        , time1 integer
+        , createDt timestamp default CURRENT_TIMESTAMP
+        , lastUpd timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
+        , version int
+        , primary key (HarvestEstmLineID)
+    );
+
+drop table if exists fbJob;
+
+    create table fbJob (
+        JobID int not null AUTO_INCREMENT
+        , PlanTruckID varchar(255)
+        , ActualTruckID varchar(255)
+        , JobSeq int
+        , DoneStatus varchar(5) -- NEW, ASGN, TKEN, DONE
+        , divID varchar(255)
+        , assignedDt timestamp 
+        , takenDt timestamp 
+        , doneDt timestamp 
+        , createDt timestamp DEFAULT CURRENT_TIMESTAMP
+        , updDt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  
+        , primary key (JobID)
+    );
+
+drop table if exists fbTask2;
+
+    create table fbTask2 (
+        TaskID int not null AUTO_INCREMENT
+        , JobID int
+        , From1 varchar(255)
+        , To1 varchar(255)
+        , Start1 int
+        , End1 int
+        , DoneStatus varchar(5) --NEW, ASGN, TKEN, DONE
+        , FromDesc varchar(255)
+        , ToDesc varchar(255)
+        , Tonnage float
+        , Blocks varchar(255)
+        , TaskSeq INT
+        , HarvestType varchar(5) --TAXA, RSTN
+        , PhaseType varchar(5) -- PLAN, ACTL
+        , takenDt timestamp 
+        , doneDt timestamp 
+        , createDt timestamp DEFAULT CURRENT_TIMESTAMP
+        , updDt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  
+        , primary key (TaskID)
+    );
 
 drop table if exists gbUsr;
 
@@ -182,7 +211,7 @@ create table gbRole
 	, roleName varchar(255)
 	, appID varchar(255)
 	, createDt timestamp default current_timestamp
-	, updDt timestamp default current_timestamp on update current_timestamp
+	, lastUpd timestamp default current_timestamp on update current_timestamp
 )
 ;
 
@@ -193,7 +222,7 @@ create table gbUsrRole
 	userID varchar(255)
 	, roleID varchar(255)
 	, createDt timestamp default current_timestamp
-	, updDt timestamp default current_timestamp on update current_timestamp
+	, lastUpd timestamp default current_timestamp on update current_timestamp
 )
 ;
 
