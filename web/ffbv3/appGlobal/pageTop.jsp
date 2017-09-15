@@ -1,35 +1,23 @@
+<%@page import="com.fz.generic.PageTopUtils"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%!
-    //HttpServletRequest request1;
     PageContext pc;
     
     String get(String paramName){
-   
-        String x = (String) pc.getRequest().getAttribute(paramName);
-        if (x == null) return "";
-        return x;
-        
+        return PageTopUtils.get(paramName, pc);
     }
     
     List<Object> getList(String paramName){
-   
-        List<Object> x = (List<Object>) 
-                pc.getRequest().getAttribute(paramName);
-        if (x == null) 
-            return new ArrayList<Object>();
-        return x;
-        
+        return PageTopUtils.getList(paramName, pc);
     }
     
     public void run(com.fz.generic.BusinessLogic logic) throws Exception {
-        logic.run(
-            (HttpServletRequest) pc.getRequest()
-            , (HttpServletResponse) pc.getResponse()
-            , pc);
+        PageTopUtils.run(logic, pc);
     }
+
 %>
 <%
-    //request1 = request;
     pc = pageContext;
+    PageTopUtils.checkLogin(pc);
 %>
