@@ -28,6 +28,14 @@ public class LoginLogic implements BusinessLogic {
             , HttpServletResponse response
             , PageContext pc
     ) throws Exception {
+
+        String result = "";
+        
+        // get user id and password from http param
+        String userID = FZUtil.getHttpParam(request, "userID");
+        String password = FZUtil.getHttpParam(request, "password");
+
+        // TODO handle empty login
         
         String sql = "";
         
@@ -36,10 +44,6 @@ public class LoginLogic implements BusinessLogic {
             
             try (Statement stm = con.createStatement()){
             
-                // get user id and password from http param
-                String userID = FZUtil.getHttpParam(request, "userID");
-                String password = FZUtil.getHttpParam(request, "password");
-                
                 // create sql
                 sql = "select userName from gbUsr"
                         + " where userID ='" + userID + "'"

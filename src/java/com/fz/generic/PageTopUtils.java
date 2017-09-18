@@ -43,8 +43,8 @@ public class PageTopUtils {
         }
         catch (Exception e){
             // TODO: create more proper exception handler
-            // i.e. redirect to general error page
-            throw new Exception("Error running business logic. ", e);
+            // i.e. redirect to user-friendly error page
+            throw e;
         }
     }
     

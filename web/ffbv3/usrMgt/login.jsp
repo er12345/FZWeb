@@ -8,10 +8,8 @@
     </head>
     <body>
         <%@include file="../appGlobal/bodyTop.jsp"%>
-        <h2>Login</h2>
-        <br>
-        <br>
-        <form class="w3-container" action="entry.jsp" method="post">
+        <h3>Login</h3>
+        <form class="container" action="entry.jsp" method="post">
 
             <div class="fzErrMsg">
                 <%=get("loginResult")%>
@@ -23,7 +21,8 @@
             <label class="fzLabel">Password</label>
             <input class="fzInput" type="password" id="password" name="password">
             <br>
-            <button class="fzButton" type="submit">GO</button>
+            <br>
+            <button class="btn fzButton" type="submit">GO</button>
         </form>         
         <%@include file="../appGlobal/bodyBottom.jsp"%>
     </body>

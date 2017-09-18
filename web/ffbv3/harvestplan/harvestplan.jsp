@@ -10,83 +10,82 @@
 <!DOCTYPE html>
 <html >
 <head>
-  <meta charset="UTF-8">
-  <title>HTML5 Editable Table</title>
-  
-  
-<link rel='stylesheet prefetch' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css'>
-<link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
-<link rel="stylesheet" href="table.css">
-    <style>
-        .etable {
-            width:300px
-        }
-    </style>
-  
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Harvest Estimates</title>
 </head>
 
 <body>
-    <img src="../img/ffbtoplogo3.png" width="350" height="90">
+  <%@include file="../appGlobal/bodyTop.jsp"%>
+  <script>
+  $( function() {
+    $( "#harvestDate" ).datepicker();
+    $( "#harvestDate" ).datepicker( "option", "dateFormat", "yy-mm-dd");
+  } );
+  </script>
     <form id="form1">
-    <p>Rencana Kerja
-    <div class1="container">
+    <div class="container">
+    <h3>Rencana Kerja</h3>
+    <br>  
+      <label class="fzLabel">Date</label>
+      <input class="fzInput" id="harvestDate" name="harvestDate"/>
+      <br>
+      <br>
+      <br>
       <div id="tbDemand" class="table-editable">
         <table class="table" border1="1">
-          <tr>
-            <th width="100px">Tipe</th>
-            <th width="100px">Block</th>
-            <th width="100px">Kg</th>
-            <th style="display:none;">Param</th>
-            <th></th>
-          </tr>
-          <tr>
-            <td class="celVal">
-              <select>
-                  <option selected>Taksasi</option>
-                  <option>Restan</option>
-              </select>
-            </td>
-            <td contenteditable="true" class="celVal">N29</td>
-            <td contenteditable="true" class="celVal">10000</td>
-            <td style="display:none;" class="celVal">Hidden</td>
-            <td>
-              <span class="table-up ">Up</span>
-              <span class="table-down ">Down</span>
-              <!--span class="table-remove ">Del</span-->
-            </td>
-          </tr>
-          <!-- This is our clonable table line -->
-          <tr class="hide">
-            <td class="celVal">
-              <select>
-                  <option selected>Taksasi</option>
-                  <option>Restan</option>
-              </select>
-            </td>
-            <td contenteditable="true" class="celVal">Isi Block</td>
-            <td contenteditable="true" class="celVal">0</td>
-            <td style="display:none;" class="celVal">Hidden</td>
-            <td>
-              <span class="table-up ">Up</span>
-              <span class="table-down ">Down</span>
-            </td>
-          </tr>
+            <tr>
+                <th width="100px" class="fzCol">Tipe</th>
+                <th width="100px" class="fzCol">Block</th>
+                <th width="100px" class="fzCol">Kg</th>
+                <th style="display:none;">Param</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td class="fzCell celVal">
+                  <select>
+                      <option selected>Taksasi</option>
+                      <option>Restan</option>
+                  </select>
+                </td>
+                <td contenteditable="true" class="fzCell celVal">N29</td>
+                <td contenteditable="true" class="fzCell celVal">10000</td>
+                <td style="display:none;" class="fzCell celVal">Hidden</td>
+                <td class="fzCell">
+                  <span class="table-up fzTextButton">Up</span>
+                  <span class="table-down fzTextButton">Down</span>
+                  <!--span class="table-remove ">Del</span-->
+                </td>
+            </tr>
+            <!-- clonable table line -->
+            <tr class="hide">
+                <td class="fzCell celVal">
+                  <select>
+                      <option selected>Taksasi</option>
+                      <option>Restan</option>
+                  </select>
+                </td>
+                <td contenteditable="true" class="fzCell celVal">Isi Block</td>
+                <td contenteditable="true" class="fzCell celVal">0</td>
+                <td style="display:none;" class="fzCell celVal">Hidden</td>
+                <td class="fzCell">
+                  <span class="table-up fzTextButton">Up</span>
+                  <span class="table-down fzTextButton">Down</span>
+                  <span class="table-remove fzTextButton">Del</span>
+                </td>
+            </tr>
         </table>
-        &nbsp;&nbsp;<span class="table-add">Add</span>
+        &nbsp;&nbsp;<span class="table-add fzTextButton">Add</span>
       </div>
-
+      <br>
+        <button id="export-btn" 
+                class="btn fzButton" 
+                type="button">GO</button>
+        <p id="export"></p>
     </div>
     <br><br>
     <br><br>
-    <p id="export"></p>
-    
     </form>
-    <button id="export-btn" class="btn btn-primary">Export Data</button>
-<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
-<script src='https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js'></script>
-<script src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js'></script>
-<script src='table.js'></script>
-
+    <script src='table.js'></script>
+    <%@include file="../appGlobal/bodyBottom.jsp"%>
 </body>
 </html>

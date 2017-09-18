@@ -2,7 +2,7 @@
   position: relative;
 }
 .table-editable .glyphicon {
-  font-size: 20px;
+  font-size: 12px;
 }
 
 .table-remove {
@@ -30,4 +30,8 @@
 }
 .table-add:hover {
   color: #0b0;
+}
+
+.etable {
+    width:300px
 }

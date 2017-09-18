@@ -129,7 +129,6 @@ drop table if exists fbHarvestEstmDoc;
     create table fbHarvestEstmDoc (
         HarvestEstmDocID int not null AUTO_INCREMENT
         , planDate datetime
-        , status varchar(20) --taksasi, restan
         , createBy varchar(255)
         , createDt timestamp default CURRENT_TIMESTAMP
         , lastUpd timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
@@ -138,15 +137,16 @@ drop table if exists fbHarvestEstmDoc;
 
 drop table if exists fbHarvestEstmLine;
 
+	-- status: --DELE, ACTV 
+	-- taskType: --TAXA, RSTN
     create table fbHarvestEstmLine (
         HarvestEstmLineID int not null AUTO_INCREMENT
-        , status varchar(20) --del, act
-        , type1 varchar(20)
+        , status varchar(5) 
+        , TaskType varchar(5) 
         , divID varchar(255)
-        , seq1 integer
+        , EstmSeq integer
         , blocks varchar(255)
         , size1 integer
-        , time1 integer
         , createDt timestamp default CURRENT_TIMESTAMP
         , lastUpd timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
         , version int
@@ -155,12 +155,13 @@ drop table if exists fbHarvestEstmLine;
 
 drop table if exists fbJob;
 
+	-- doneStatus: -- NEW, ASGN, TKEN, DONE
     create table fbJob (
         JobID int not null AUTO_INCREMENT
         , PlanTruckID varchar(255)
         , ActualTruckID varchar(255)
         , JobSeq int
-        , DoneStatus varchar(5) -- NEW, ASGN, TKEN, DONE
+        , DoneStatus varchar(5) 
         , divID varchar(255)
         , assignedDt timestamp 
         , takenDt timestamp 
@@ -172,6 +173,9 @@ drop table if exists fbJob;
 
 drop table if exists fbTask2;
 
+	-- doneStatus: -- NEW, ASGN, TKEN, DONE
+	-- taskType: --TAXA, RSTN
+	-- PhaseType: -- PLAN, ACTL
     create table fbTask2 (
         TaskID int not null AUTO_INCREMENT
         , JobID int
@@ -179,14 +183,14 @@ drop table if exists fbTask2;
         , To1 varchar(255)
         , Start1 int
         , End1 int
-        , DoneStatus varchar(5) --NEW, ASGN, TKEN, DONE
+        , DoneStatus varchar(5) 
         , FromDesc varchar(255)
         , ToDesc varchar(255)
         , Tonnage float
         , Blocks varchar(255)
         , TaskSeq INT
-        , HarvestType varchar(5) --TAXA, RSTN
-        , PhaseType varchar(5) -- PLAN, ACTL
+        , TaskType varchar(5) 
+        , PhaseType varchar(5) 
         , takenDt timestamp 
         , doneDt timestamp 
         , createDt timestamp DEFAULT CURRENT_TIMESTAMP
