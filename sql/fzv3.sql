@@ -1084,3 +1084,23 @@ VALUES (0,{ts '2017-09-13 09:23:19.'},'BINE1',1,'N27',12000,530,'Truck1','MR_N27
 CREATE USER IF NOT EXISTS 'user1'@'localhost' IDENTIFIED BY 'Yuser12345';
 
 GRANT ALL PRIVILEGES ON fz.* TO 'user1'@'localhost';
+
+
+---------- TMS ------------------
+drop table if exists tmProgress;
+
+CREATE TABLE tmprogress
+(
+   runID varchar(255),
+   status varchar(4),
+   iter bigint,
+   maxIter bigint,
+   subIter bigint,
+   maxSubIter bigint,
+   msg longtext,
+   pct tinyint,
+   lastUpd timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+   created timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+   mustFinish int
+)
+;
