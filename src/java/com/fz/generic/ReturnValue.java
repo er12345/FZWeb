@@ -4,11 +4,12 @@
  * and open the template in the editor.
  */
 
-package com.fz.ffbv3.service.harvestplan;
+package com.fz.generic;
 
 /**
  *
  */
-public class HarvestPlanList {
-
+public class ReturnValue {
+    public boolean success = true;
+    public String msg = "";
 }

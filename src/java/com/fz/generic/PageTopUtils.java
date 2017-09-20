@@ -6,6 +6,7 @@
 
 package com.fz.generic;
 
+import com.fz.util.FZUtil;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -35,16 +36,40 @@ public class PageTopUtils {
     
     public static void run(BusinessLogic logic, PageContext pc)
         throws Exception {
+        HttpServletRequest request = (HttpServletRequest) pc.getRequest();
+        HttpServletResponse response = (HttpServletResponse) pc.getResponse();
         try {
-            logic.run(
-                (HttpServletRequest) pc.getRequest()
-                , (HttpServletResponse) pc.getResponse()
-                , pc);
+            logic.run(request, response, pc);
         }
         catch (Exception e){
-            // TODO: create more proper exception handler
-            // i.e. redirect to user-friendly error page
-            throw e;
+            // forward to error page to display error message
+            // TODO: beautify the page
+            String msg = FZUtil.toStackTraceText(e);
+            System.out.println(msg);
+            request.setAttribute("errMsg", msg);
+            request
+                    .getRequestDispatcher("../appGlobal/error.jsp")
+                    .forward(request, response);
+        }
+    }
+    
+    public static void runAPI(BusinessLogic logic, PageContext pc)
+        throws Exception {
+        HttpServletRequest request = (HttpServletRequest) pc.getRequest();
+        HttpServletResponse response = (HttpServletResponse) pc.getResponse();
+        try {
+            logic.run(request, response, pc);
+        }
+        catch (Exception e){
+            
+            String msg = FZUtil.toStackTraceText(e);
+            System.out.println(msg);
+            pc.getOut().print(
+                    "{\"result\" : \"ERR\""
+                    + ", \"errMsg\" :"
+                    + "\"" + FZUtil.escapeText(msg) 
+                    + "\"}"
+            );
         }
     }
     

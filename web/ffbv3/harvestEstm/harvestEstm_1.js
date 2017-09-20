@@ -1,6 +1,7 @@
     var $TABLE = $('#tbDemand');
     var $BTN = $('#export-btn');
     var $EXPORT = $('#export');
+    var $processPage = '../../api/hvsEstmSave';
 
     $('.table-add').click(function () {
       var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
@@ -62,15 +63,23 @@
         });
 
         // Output the result
-        var result = JSON.stringify(data);
-        $EXPORT.text(result);
+        var dataJson = JSON.stringify(data);
+        var headerJson = JSON.stringify(headers);
+        var result = 
+                '{\"harvestDate\" : ' + '\"2017-01-01\"' 
+                + '\n, \"estimateHeaders\" : ' + headerJson
+                + '\n, \"estimateRows\" : '  + dataJson
+                + '\n}'  
+                ;
+                
+        //$EXPORT.text(result);
   
         // call server
         sendCommand(result);
 });
 
 function sendCommand(jsonIn){
-     var data_file = "harvestplanprc.jsp?json=" + jsonIn;
+     var data_file = $processPage + "?json=" + jsonIn;
      http_request = new XMLHttpRequest();
      console.log('Sending command');
      try{

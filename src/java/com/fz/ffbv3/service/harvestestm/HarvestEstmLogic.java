@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.fz.ffbv3.service.harvestplan;
+package com.fz.ffbv3.service.harvestestm;
 
 import com.fz.generic.BusinessLogic;
 import javax.servlet.http.HttpServletRequest;
@@ -14,16 +14,11 @@ import javax.servlet.jsp.PageContext;
 /**
  *
  */
-public class HarvestPlanLogic implements BusinessLogic {
+public class HarvestEstmLogic implements BusinessLogic {
 
     @Override
-    public void run(HttpServletRequest request, HttpServletResponse response
-            , PageContext pc) throws Exception {
-        
-        // TODO
-        // get latest harvest plan
-        // keep in attribute
-        
+    public void run(HttpServletRequest request, HttpServletResponse response, PageContext pc) throws Exception {
+        // TODO:
     }
 
 }

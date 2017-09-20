@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="../appGlobal/pageTop.jsp"%>
-<%run(new com.fz.ffbv3.service.harvestplan.HarvestPlanLogic());%>
+<%run(new com.fz.ffbv3.service.harvestestm.HarvestEstmLogic());%>
 <!DOCTYPE html>
 <html >
 <head>
@@ -24,7 +24,7 @@
   </script>
     <form id="form1">
     <div class="container">
-    <h3>Rencana Kerja</h3>
+    <h3>Estimasi Rencana Kerja</h3>
     <br>  
       <label class="fzLabel">Date</label>
       <input class="fzInput" id="harvestDate" name="harvestDate"/>
@@ -43,8 +43,8 @@
             <tr>
                 <td class="fzCell celVal">
                   <select>
-                      <option selected>Taksasi</option>
-                      <option>Restan</option>
+                      <option selected>TAXA</option>
+                      <option>RSTN</option>
                   </select>
                 </td>
                 <td contenteditable="true" class="fzCell celVal">N29</td>
@@ -60,8 +60,8 @@
             <tr class="hide">
                 <td class="fzCell celVal">
                   <select>
-                      <option selected>Taksasi</option>
-                      <option>Restan</option>
+                      <option selected>TAXA</option>
+                      <option>RSTN</option>
                   </select>
                 </td>
                 <td contenteditable="true" class="fzCell celVal">Isi Block</td>
@@ -85,7 +85,7 @@
     <br><br>
     <br><br>
     </form>
-    <script src='table.js'></script>
+    <script src='harvestEstm.js'></script>
     <%@include file="../appGlobal/bodyBottom.jsp"%>
 </body>
 </html>

@@ -16,6 +16,10 @@
         PageTopUtils.run(logic, pc);
     }
 
+    public void runAPI(com.fz.generic.BusinessLogic logic) throws Exception {
+        PageTopUtils.runAPI(logic, pc);
+    }
+
 %>
 <%
     pc = pageContext;
