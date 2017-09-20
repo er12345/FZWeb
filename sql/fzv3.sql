@@ -124,23 +124,25 @@ CREATE TABLE fbtask
 )
 ;
 
-drop table if exists fbHarvestEstmDoc;
+drop table if exists fbHvsEstm;
 
-    create table fbHarvestEstmDoc (
-        HarvestEstmDocID int not null AUTO_INCREMENT
-        , planDate datetime
+    -- status : NEW, CALC
+    create table fbHvsEstm (
+        HvsEstmID int not null AUTO_INCREMENT
+        , harvestDate datetime
+        , status varchar(5)
         , createBy varchar(255)
         , createDt timestamp default CURRENT_TIMESTAMP
         , lastUpd timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
-        , primary key (HarvestEstmDocID)
+        , primary key (HvsEstmID)
     );
 
-drop table if exists fbHarvestEstmLine;
+drop table if exists fbHvsEstmDtl;
 
 	-- status: --DELE, ACTV 
 	-- taskType: --TAXA, RSTN
-    create table fbHarvestEstmLine (
-        HarvestEstmLineID int not null AUTO_INCREMENT
+    create table fbHvsEstmDtl (
+        HvsEstmDtlID int not null AUTO_INCREMENT
         , status varchar(5) 
         , TaskType varchar(5) 
         , divID varchar(255)
@@ -150,7 +152,7 @@ drop table if exists fbHarvestEstmLine;
         , createDt timestamp default CURRENT_TIMESTAMP
         , lastUpd timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
         , version int
-        , primary key (HarvestEstmLineID)
+        , primary key (HvsEstmDtlID)
     );
 
 drop table if exists fbJob;
@@ -168,6 +170,8 @@ drop table if exists fbJob;
         , doneDt timestamp 
         , createDt timestamp DEFAULT CURRENT_TIMESTAMP
         , updDt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  
+        , block1 varchar(255)
+        , block2 varchar(255)
         , primary key (JobID)
     );
 
@@ -230,7 +234,7 @@ create table gbUsrRole
 )
 ;
 
-----------------------------------------------------------
+--  --------------------------------------------------------
 
 INSERT INTO fbblock (blockID,divID,x1,y1,x2,y2) VALUES ('L34','BINE1',105.5104269,-1.873264593,105.5104269,-1.873264593);
 INSERT INTO fbblock (blockID,divID,x1,y1,x2,y2) VALUES ('L34','BINE1',105.5090763,-1.872757304,105.5090763,-1.872757304);
@@ -994,9 +998,6 @@ INSERT INTO fbblock (blockID,divID,x1,y1,x2,y2) VALUES ('W26','BINE5',105.487666
 INSERT INTO fbblock (blockID,divID,x1,y1,x2,y2) VALUES ('W26','BINE5',105.4892583,-1.966596065,105.4892583,-1.966596065);
 INSERT INTO fbblock (blockID,divID,x1,y1,x2,y2) VALUES ('W26','BINE5',105.4877132,-1.962012216,105.4877132,-1.962012216);
 
-
-
-
 INSERT INTO fbdiv (divID,estateID,millID) VALUES ('BINE1','BINE','LWSM');
 INSERT INTO fbdiv (divID,estateID,millID) VALUES ('BINE2','BINE','LWSM');
 INSERT INTO fbdiv (divID,estateID,millID) VALUES ('BINE3','BINE','LWSM');
@@ -1007,10 +1008,6 @@ INSERT INTO fbdiv (divID,estateID,millID) VALUES ('BINE5','BINE','LWSM');
 INSERT INTO fbmill (millID,lon,lat) VALUES ('LWSM',105.477,-1.9012);
 
 
-
-
-
-
 INSERT INTO fbsol (runID,solTimeID,solType,restan,lastJobEndTime,lastJobEndClock,vehicles,recentTwist,lastUpd) VALUES ('20170911_153449186','20170911_153449458','INIT',0.0,1111,'18:31',5,null,{ts '2017-09-11 15:34:49.'});
 INSERT INTO fbsol (runID,solTimeID,solType,restan,lastJobEndTime,lastJobEndClock,vehicles,recentTwist,lastUpd) VALUES ('20170911_153449186','20170911_153458679','OPTI',0.0,1111,'18:31',5,null,{ts '2017-09-11 15:34:58.'});
 
@@ -1019,74 +1016,8 @@ INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,ar
 INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck1','BINE2_2','N24; N25',9000.0,553,556,74,632,635,642,105.4821058,-1.893813215,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
 INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck1','BINE2_3','N25',9000.0,643,647,73,722,726,733,105.4848548,-1.893824364,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
 INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck1','BINE2_4','N25; N26',9000.0,734,738,72,812,816,823,105.4848548,-1.893824364,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck1','BINE2_5','N26; N27',8394.0,824,829,71,902,907,914,105.4876239,-1.893830532,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck2','BINE1_1','N29; N30',9000.0,480,519,21,542,550,557,105.4959792,-1.891784564,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck2','BINE1_2','N30; N31; N32',9000.0,558,566,64,632,640,647,105.4987293,-1.891783321,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck2','BINE1_3','N32',6470.0,648,659,61,722,733,740,105.5041599,-1.893858625,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck3','BINE3_1','S26; S27; S28',9000.0,480,528,12,542,554,561,105.4875086,-1.930043492,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck3','BINE3_2','S28',9000.0,562,575,55,632,645,652,105.4931355,-1.930123514,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck3','BINE3_3','S28; S29',9000.0,653,666,54,722,735,742,105.4931355,-1.930123514,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck3','BINE3_4','S29; S30; S31',9000.0,743,756,54,812,825,832,105.4958303,-1.9301382,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck3','BINE3_5','S31',8743.0,833,847,53,902,916,923,105.5012835,-1.930125666,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck4','BINE4_1','T32; T33',9000.0,480,526,14,542,559,566,105.5039019,-1.939255814,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck4','BINE4_2','T33; T34; T35; T36',9000.0,567,584,46,632,649,656,105.506513,-1.937621759,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck4','BINE4_3','T36; T37',9000.0,657,676,44,722,741,748,105.5148018,-1.939218233,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck4','BINE4_4','T37; T38',9000.0,749,769,41,812,832,839,105.5174205,-1.93886718,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck4','BINE4_5','T38',9000.0,840,862,38,902,924,931,105.5202437,-1.939319632,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck4','BINE4_6','T38; T39',9000.0,932,954,36,992,1014,1021,105.5202437,-1.939319632,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck4','BINE4_7','T39',2355.0,1022,1044,36,1082,1104,1111,105.5230681,-1.939256232,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck5','BINE5_1','V32',9000.0,480,530,10,542,565,572,105.5038433,-1.957471548,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck5','BINE5_2','V32; V33',9000.0,573,596,34,632,655,662,105.5038433,-1.957471548,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck5','BINE5_3','V33; V34',9000.0,663,687,33,722,746,753,105.5066483,-1.95747959,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck5','BINE5_4','V34; V35',9000.0,754,778,32,812,836,843,105.5094107,-1.957507936,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck5','BINE5_5','V35; V36',9000.0,844,869,31,902,927,934,105.5121556,-1.957520214,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153449458',null,'Truck5','BINE5_6','V36',5344.0,935,960,30,992,1017,1024,105.5147514,-1.957464416,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:49.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck1','BINE2_1','N24',9000.0,480,525,15,542,545,552,105.4821058,-1.893813215,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck1','BINE2_2','N24; N25',9000.0,553,556,74,632,635,642,105.4821058,-1.893813215,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck1','BINE2_3','N25',9000.0,643,647,73,722,726,733,105.4848548,-1.893824364,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck1','BINE2_4','N25; N26',9000.0,734,738,72,812,816,823,105.4848548,-1.893824364,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck1','BINE2_5','N26; N27',8394.0,824,829,71,902,907,914,105.4876239,-1.893830532,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck2','BINE1_1','N29; N30',9000.0,480,519,21,542,550,557,105.4959792,-1.891784564,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck2','BINE1_2','N30; N31; N32',9000.0,558,566,64,632,640,647,105.4987293,-1.891783321,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck2','BINE1_3','N32',6470.0,648,659,61,722,733,740,105.5041599,-1.893858625,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck3','BINE3_1','S26; S27; S28',9000.0,480,528,12,542,554,561,105.4875086,-1.930043492,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck3','BINE3_2','S28',9000.0,562,575,55,632,645,652,105.4931355,-1.930123514,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck3','BINE3_3','S28; S29',9000.0,653,666,54,722,735,742,105.4931355,-1.930123514,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck3','BINE3_4','S29; S30; S31',9000.0,743,756,54,812,825,832,105.4958303,-1.9301382,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck3','BINE3_5','S31',8743.0,833,847,53,902,916,923,105.5012835,-1.930125666,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck4','BINE4_1','T32; T33',9000.0,480,526,14,542,559,566,105.5039019,-1.939255814,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck4','BINE4_2','T33; T34; T35; T36',9000.0,567,584,46,632,649,656,105.506513,-1.937621759,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck4','BINE4_3','T36; T37',9000.0,657,676,44,722,741,748,105.5148018,-1.939218233,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck4','BINE4_4','T37; T38',9000.0,749,769,41,812,832,839,105.5174205,-1.93886718,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck4','BINE4_5','T38',9000.0,840,862,38,902,924,931,105.5202437,-1.939319632,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck4','BINE4_6','T38; T39',9000.0,932,954,36,992,1014,1021,105.5202437,-1.939319632,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck4','BINE4_7','T39',2355.0,1022,1044,36,1082,1104,1111,105.5230681,-1.939256232,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck5','BINE5_1','V32',9000.0,480,530,10,542,565,572,105.5038433,-1.957471548,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck5','BINE5_2','V32; V33',9000.0,573,596,34,632,655,662,105.5038433,-1.957471548,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck5','BINE5_3','V33; V34',9000.0,663,687,33,722,746,753,105.5066483,-1.95747959,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck5','BINE5_4','V34; V35',9000.0,754,778,32,812,836,843,105.5094107,-1.957507936,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck5','BINE5_5','V35; V36',9000.0,844,869,31,902,927,934,105.5121556,-1.957520214,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
-INSERT INTO fbtask (runID,solTimeID,clock1,agnID,splyID,blocks,size1,startMin,arrvSplyMin,waitSplyDur,dprtSplyMin,arrvMillMin,endMin,lonSply,latSply,lonMill,latMill,millName,lastUpd,status) VALUES ('20170911_153449186','20170911_153458679',null,'Truck5','BINE5_6','V36',5344.0,935,960,30,992,1017,1024,105.5147514,-1.957464416,105.477,105.477,'LWSM',{ts '2017-09-11 15:34:58.'},'-');
 
---- app user ---- 
-INSERT INTO gbusr (userID,password,userName) VALUES ('user1','password','User 1');
-
---- sample task ---
-INSERT INTO fbtaskexec (planID,taskDate,divID,seq1,blocks,size1,time1,truckID,roadNames,runID,status,version) 
-VALUES (0,{ts '2017-09-13 09:23:19.'},'BINE1',1,'N25;N26',11000,430,'Truck1','MR_N25_N26','20170101_08080922'
-,'DONE',1);
-INSERT INTO fbtaskexec (planID,taskDate,divID,seq1,blocks,size1,time1,truckID,roadNames,runID,status,version) 
-VALUES (0,{ts '2017-09-13 09:23:19.'},'BINE1',1,'N27',12000,530,'Truck1','MR_N27','20170101_08080922'
-,'NEW',1);
-
-
---- db user ----
-CREATE USER IF NOT EXISTS 'user1'@'localhost' IDENTIFIED BY 'Yuser12345';
-
-GRANT ALL PRIVILEGES ON fz.* TO 'user1'@'localhost';
-
-
----------- TMS ------------------
+-- TMS ------------------
 drop table if exists tmProgress;
 
 CREATE TABLE tmprogress
@@ -1104,3 +1035,11 @@ CREATE TABLE tmprogress
    mustFinish int
 )
 ;
+-- app user ---- 
+INSERT INTO gbusr (userID,password,userName) VALUES ('user1','password','User 1');
+
+-- db user ----
+CREATE USER IF NOT EXISTS 'user1'@'localhost' IDENTIFIED BY 'Yuser12345';
+
+GRANT ALL PRIVILEGES ON fz.* TO 'user1'@'localhost';
+
