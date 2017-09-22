@@ -26,8 +26,11 @@
     <div class="container">
     <h3>Estimasi Rencana Kerja</h3>
     <br>  
+        <div class="fzErrMsg" id="errMsg">
+        </div>
       <label class="fzLabel">Date</label>
-      <input class="fzInput" id="harvestDate" name="harvestDate"/>
+      <input class="fzInput" id="harvestDate" 
+             name="harvestDate" value="<%=get("hvsDt")%>"/>
       <br>
       <br>
       <br>
@@ -87,5 +90,6 @@
     </form>
     <script src='harvestEstm.js'></script>
     <%@include file="../appGlobal/bodyBottom.jsp"%>
+    <%@include file="../appGlobal/bodyBottomLoading.jsp"%>
 </body>
 </html>

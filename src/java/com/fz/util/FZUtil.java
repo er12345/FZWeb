@@ -477,4 +477,13 @@ public class FZUtil {
         
     }
     
+    public boolean isValidDate(String dateString) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        try {
+            df.parse(dateString);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

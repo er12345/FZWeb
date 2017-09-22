@@ -185,8 +185,10 @@ drop table if exists fbTask2;
         , JobID int
         , From1 varchar(255)
         , To1 varchar(255)
-        , Start1 int
-        , End1 int
+        , PlannedStart1 int
+        , PlannedEnd1 int
+        , ActualStart1 int
+        , ActualEnd1 int
         , DoneStatus varchar(5) 
         , FromDesc varchar(255)
         , ToDesc varchar(255)
@@ -199,6 +201,8 @@ drop table if exists fbTask2;
         , doneDt timestamp 
         , createDt timestamp DEFAULT CURRENT_TIMESTAMP
         , updDt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  
+        , reasonState varchar(255)
+        , reasonID varchar(255)
         , primary key (TaskID)
     );
 

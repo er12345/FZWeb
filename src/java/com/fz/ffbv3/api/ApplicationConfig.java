@@ -30,6 +30,8 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.fz.ffbv3.api.exampleAPI.APISample.class);
         resources.add(com.fz.ffbv3.api.harvestestmAPI.HarvestEstmSaveAPI.class);
+        resources.add(com.fz.ffbv3.api.harvestestmAPI.HarvestEstmSaveAPI_orig.class);
+        resources.add(com.fz.ffbv3.api.progresstack.ProgressTrack.class);
     }
     
 }

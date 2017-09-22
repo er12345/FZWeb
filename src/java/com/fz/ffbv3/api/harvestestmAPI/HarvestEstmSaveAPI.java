@@ -11,7 +11,10 @@ import com.fz.generic.ReturnValue;
 import com.fz.util.FZUtil;
 import com.google.gson.Gson;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -47,55 +50,96 @@ public class HarvestEstmSaveAPI {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getJson(@QueryParam("json") String jsonInput) {
-        
+    public String getJson(
+            @QueryParam("json") String jsonInput
+            , @Context HttpServletRequest request) {
+
+        // initialize standard return value
         ReturnValue returnValue = new ReturnValue();
+        
+        // create json parser using Gson library from Google
         Gson gson = new Gson();
+        
         try {
             
+            // parse JSON input into java object
+            HarvestEstm he = gson.fromJson(jsonInput, HarvestEstm.class);
+            
+            // open db connection and 1 statement to insert header
+            String sql = "insert into fbHvsEstm(hvsDt, status, createdBy)"
+                    + " values(?,?,?)";
             try (
                 Connection con = (new Db()).getConnection("jdbc/fz");
-                Statement stm = con.createStatement()
+                PreparedStatement psHdr = con.prepareStatement(sql
+                        , Statement.RETURN_GENERATED_KEYS);
                 )  {
                 
-                // parse JSON into object
-                HarvestEstm hp = gson.fromJson(jsonInput, HarvestEstm.class);
-
-                // insert each rows
-                for (String[] ss : hp.estimateRows){
-
-                    // create sql value list
-                    String vals = "";
-                    vals += "'" + ss[0] + "'"; // type
-                    vals += ",'" + ss[1] + "'"; // block
-                    vals += ",'" + ss[2] + "'"; // kg
-
-                    String sql = "insert into fbHvsEstmDtl"
-                            + "(taskType, blocks, size1)"
-                            + " values("
-                            + vals + ")";
-
-                    // query insert 
-                    stm.executeUpdate(sql);
-
+                // start database transaction,
+                // transaction needed because we have several sql 
+                con.setAutoCommit(false);
+                
+                // insert header to db
+                psHdr.setDate(1, java.sql.Date.valueOf(he.harvestDate));
+                psHdr.setString(2, "NEW");
+                psHdr.setString(3, "");
+                psHdr.executeUpdate();
+                
+                // get generated auto increment key from db
+                int key = -1;
+                try (ResultSet rs = psHdr.getGeneratedKeys()){
+                    rs.next();
+                    key = rs.getInt(1);
                 }
 
-                // create returnValue 
-                returnValue.success = true;
-                returnValue.msg = "Success!";
+                // create child sql
+                sql = "insert into fbHvsEstmDtl"
+                        + "(taskType, blocks, size1, hvsEstmID)"
+                        + " values(?,?,?,?)";
+                try(PreparedStatement ps = con.prepareStatement(sql)){
+
+                    // insert each rows
+                    for (String[] ss : he.estimateRows){
+
+                        // set the values
+                        ps.clearParameters();
+                        ps.setString(1, ss[0]); // type
+                        ps.setString(2, ss[1]); // blocks
+                        ps.setDouble(3, Double.parseDouble(ss[2])); // kg
+                        ps.setInt(4, key); // parent
+                        
+                        // add to sql batch
+                        ps.addBatch();
+
+                    }
+                    
+                    // execute sql batch
+                    ps.clearParameters();
+                    int[] results = ps.executeBatch();
+                }
+                
+                // commit transaction
+                con.setAutoCommit(true);
+                
             }
+            
+            // create success returnValue 
+            returnValue.success = true;
+            returnValue.msg = "Success!";
         }
         catch(Exception e){
             
-            // create error returnValue 
+            // convert stack trace to string
             String msg = FZUtil.toStackTraceText(e);
+            
+            // create error returnValue 
             returnValue.success = false;
             returnValue.msg = msg;
             
+            // print to console for debug
             System.out.println(msg);
         }
 
-        // convert returnValue to json, return it
+        // convert returnValue to json, then return it
         String jsonOutput = gson.toJson(returnValue, ReturnValue.class);
         return jsonOutput;
     }

@@ -65,74 +65,30 @@
         // Output the result
         var dataJson = JSON.stringify(data);
         var headerJson = JSON.stringify(headers);
-        var result = 
+        var jsonForServer = 
                 '{\"harvestDate\" : ' + '\"2017-01-01\"' 
                 + '\n, \"estimateHeaders\" : ' + headerJson
                 + '\n, \"estimateRows\" : '  + dataJson
                 + '\n}'  
                 ;
                 
-        //$EXPORT.text(result);
+        // uncomment to debug
+        $EXPORT.text(result);
   
         // call server
-        $.get( $apiAddress, {json : result})
+        $.get( $apiAddress, {json : jsonForServer})
           .done(function( data ) {
-            alert( "Result: " + data.success
-                + "; Msg: " + data.msg
-                      );
+                if (data.success){
+                    alert('Success');
+                    $('#errMsg').html('');
+                }
+                else{
+                    alert('Error');
+                    $('#errMsg')
+                        .html('Error.<br><br>Detail for tech support:<br>' 
+                        + data.msg);
+                }
           });
     });
 
-//
-//function sendCommand(jsonIn){
-//     var data_file = $processPage + "?json=" + jsonIn;
-//     http_request = new XMLHttpRequest();
-//     console.log('Sending command');
-//     try{
-//        // Opera 8.0+, Firefox, Chrome, Safari
-//        http_request = new XMLHttpRequest();
-//     }catch (e){
-//        // Internet Explorer Browsers
-//        try{
-//           http_request = new ActiveXObject("Msxml2.XMLHTTP");
-//
-//        }catch (e) {
-//
-//           try{
-//              http_request = new ActiveXObject("Microsoft.XMLHTTP");
-//           }catch (e){
-//              // Something went wrong
-//              alert("Your browser broke!");
-//              return false;
-//           }
-//
-//        }
-//     }
-//     // send it
-//     console.log("Get data");
-//     http_request.onreadystatechange = commandResponded; // callback
-//     http_request.open("GET", data_file, true);
-//     http_request.send();
-//}
-//
-//function commandResponded(){
-//
-//    console.log('Dload done');
-//
-//    // if http state ready
-//   if (http_request.readyState === 4  ){
-//
-//        // if request not empty
-//        var rsp = http_request.responseText; 
-//        console.log('Response = ' + rsp);
-//        if (rsp.trim() !== ''){
-//            alert(rsp);
-//        }
-//        else {
-//            // empty response string
-//            console.log('Empty Response');
-//        }
-//
-//   }
-//}
 
