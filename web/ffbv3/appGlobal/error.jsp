@@ -15,6 +15,7 @@
         <%@include file="../appGlobal/bodyTop.jsp"%>
         <h1>Error occured</h1>
         <div class="fzErrMsg">
+            Detail for tech support:<br>
             <%=get("errMsg")%>
         </div>
         <%@include file="../appGlobal/bodyBottom.jsp"%>

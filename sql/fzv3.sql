@@ -129,7 +129,8 @@ drop table if exists fbHvsEstm;
     -- status : NEW, CALC
     create table fbHvsEstm (
         HvsEstmID int not null AUTO_INCREMENT
-        , harvestDate datetime
+        , hvsDt datetime
+        , divID varchar(255)
         , status varchar(5)
         , createBy varchar(255)
         , createDt timestamp default CURRENT_TIMESTAMP
@@ -142,10 +143,10 @@ drop table if exists fbHvsEstmDtl;
 	-- status: --DELE, ACTV 
 	-- taskType: --TAXA, RSTN
     create table fbHvsEstmDtl (
-        HvsEstmDtlID int not null AUTO_INCREMENT
+        hvsEstmDtlID int not null AUTO_INCREMENT
+        , hvsEstmID int 
         , status varchar(5) 
         , TaskType varchar(5) 
-        , divID varchar(255)
         , EstmSeq integer
         , blocks varchar(255)
         , size1 integer
@@ -185,10 +186,10 @@ drop table if exists fbTask2;
         , JobID int
         , From1 varchar(255)
         , To1 varchar(255)
-        , PlannedStart1 int
-        , PlannedEnd1 int
-        , ActualStart1 int
-        , ActualEnd1 int
+        , PlanStart datetime
+        , PlanEnd datetime
+        , ActualStart datetime
+        , ActualEnd datetime
         , DoneStatus varchar(5) 
         , FromDesc varchar(255)
         , ToDesc varchar(255)
@@ -201,8 +202,8 @@ drop table if exists fbTask2;
         , doneDt timestamp 
         , createDt timestamp DEFAULT CURRENT_TIMESTAMP
         , updDt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  
-        , reasonState varchar(255)
-        , reasonID varchar(255)
+        , reasonState int
+        , reasonID int
         , primary key (TaskID)
     );
 

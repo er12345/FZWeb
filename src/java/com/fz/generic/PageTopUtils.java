@@ -9,6 +9,8 @@ package com.fz.generic;
 import com.fz.util.FZUtil;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
@@ -25,13 +27,16 @@ public class PageTopUtils {
         
     }
     
-    public static List<Object> getList(String paramName, PageContext pc){
-        List<Object> x = (List<Object>) 
-                pc.getRequest().getAttribute(paramName);
-        if (x == null) 
-            return new ArrayList<Object>();
-        return x;
-        
+    public static Object getList(String paramName, PageContext pc){
+        HttpServletRequest request = (HttpServletRequest) pc.getRequest();
+        Object o = request.getAttribute(paramName);
+        return o;
+    }
+    
+    public static Object getObj(String paramName, PageContext pc){
+        HttpServletRequest request = (HttpServletRequest) pc.getRequest();
+        Object o = request.getAttribute(paramName);
+        return o;
     }
     
     public static void run(BusinessLogic logic, PageContext pc)
@@ -82,5 +87,11 @@ public class PageTopUtils {
         catch (Exception e){
             throw new Exception("Error checking login. ", e);
         }
+    }
+    
+    public static String makeOption(String param, String value, String text) {
+        String sel = (param.equals(value) ? " selected" : "");
+        String ret = "<option " + sel + " value='" + value + "'>" + text + "</option>";
+        return ret;
     }
 }

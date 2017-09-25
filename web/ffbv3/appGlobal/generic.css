@@ -8,6 +8,9 @@ body{
 .fzLabel{
     display:inline-block;width:140px;text-align:left
 }
+.fzLabelBottom{
+    display:inline-block;width:140px;text-align:left;font-size:10px;
+}
 .fzCol{
     
 }

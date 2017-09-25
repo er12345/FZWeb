@@ -19,6 +19,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -142,12 +143,10 @@ public class FZUtil {
         return d;
     }
     
-    public static double extractDouble(String[] vals, int i, double default1){
-        double r = default1;
-        if (i < vals.length ){
-            r = FZUtil.toDouble(vals[i], default1);
-        }
-        return r;
+    // example "yyyy-MM-dd"
+    public static String toDateString(Date d, String formatString){
+        SimpleDateFormat formatter = new SimpleDateFormat(formatString);
+        return formatter.format(d);
     }
 
     public static int[] splitToComponentTimes(double longVal)
