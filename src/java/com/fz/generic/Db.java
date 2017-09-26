@@ -6,10 +6,13 @@
 package com.fz.generic;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
- * @author Eri Fizal
  */
 public class Db {
     
@@ -23,5 +26,5 @@ public class Db {
         java.sql.Connection con = ds.getConnection();
         return con;
     }
-    
+
 }

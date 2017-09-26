@@ -1,10 +1,8 @@
 <%-- 
-    Document   : index
-    Created on : Sep 12, 2017, 3:04:15 PM
-    Author     : Eri Fizal
+    Document   : test
+    Created on : Sep 13, 2017, 5:10:10 PM
 --%>
 
-<%@page import="com.fz.ffbv3.exampleService1.ExampleService1"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,6 +11,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>1 + 1 = <%=(new ExampleService1()).getOutput()%></h1>
+        <h1>Hello Heru!</h1>
     </body>
 </html>

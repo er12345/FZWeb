@@ -10,7 +10,6 @@ import javax.ws.rs.core.Application;
 
 /**
  *
- * @author Eri Fizal
  */
 @javax.ws.rs.ApplicationPath("api")
 public class ApplicationConfig extends Application {
@@ -30,6 +29,8 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.fz.ffbv3.api.exampleAPI.APISample.class);
+        resources.add(com.fz.ffbv3.api.hvsEstmAPI.HvsEstmSaveAPI.class);
+        resources.add(com.fz.ffbv3.api.progresstack.ProgressTrack.class);
     }
     
 }
