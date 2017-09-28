@@ -2,7 +2,17 @@
 <Context path="/fz">
   <Resource name="jdbc/fz" auth="Container" type="javax.sql.DataSource"
                maxActive="50" maxIdle="30" maxWait="10000"
-               username="user1" password="Yuser12345"
+               username="root" password="root"
                driverClassName="com.mysql.jdbc.Driver"
                url="jdbc:mysql://localhost:3306/fz"/>
+  <Resource name="prod/tms" auth="Container" type="javax.sql.DataSource"
+               maxActive="50" maxIdle="30" maxWait="10000"
+               username="TMS" password="Tm$1212"
+               driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+               url="jdbc:sqlserver://10.16.1.110:1433;databaseName=BOSNET1;"/>
+  <Resource name="lcal/tms" auth="Container" type="javax.sql.DataSource"
+               maxActive="50" maxIdle="30" maxWait="10000"
+               username="sa" password="root"
+               driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+               url="jdbc:sqlserver://GLENN-PC:1433;databaseName=BOSNET1;"/>
 </Context>

@@ -25,7 +25,8 @@ public class Router {
      * @throws Exception 
      */
     public void route(
-            List<CustDelivery> custDeliveries
+            String runID
+            , List<CustDelivery> custDeliveries
             , List<DeliveryAgent> deliveryAgents
             , int maxIteration
             , String timeDistSource // M:manhattan, G:google, P:Previouse google runID

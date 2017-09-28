@@ -1048,3 +1048,75 @@ CREATE USER IF NOT EXISTS 'user1'@'localhost' IDENTIFIED BY 'Yuser12345';
 
 GRANT ALL PRIVILEGES ON fz.* TO 'user1'@'localhost';
 
+
+
+--------------------------------
+create table tmTask(
+	VehicleID varchar(50),
+	DO# varchar(50),
+	SiteName varchar(255),
+	Arrive varchar(50),
+	Depart varchar(50),
+	RunID varchar(50),
+	Address varchar(255),
+	Kec varchar(50),
+	Kel varchar(50),
+	City varchar(50),
+	Zip varchar(50),
+	CustID varchar(10),
+	Lon varchar(25),
+	Lat varchar(25),
+	Priority varchar(50),
+	ServiceTime int,
+	AccessibleBy varchar(50),
+	TotalCubication decimal(17, 3),
+	TotalKg decimal(17, 3),
+	Date date,
+	Shift varchar(25),
+	Branch varchar(50)
+);
+
+
+CREATE TABLE tmprogress
+(
+   runID varchar(255),
+   status varchar(4),
+   mustFinish tinyint,
+   iter bigint,
+   maxIter bigint,
+   subIter bigint,
+   maxSubIter bigint,
+   msg varchar(255),
+   pct tinyint,
+   lastUpd date DEFAULT CURRENT_TIMESTAMP NOT NULL,
+   created date DEFAULT CURRENT_TIMESTAMP NOT NULL
+)
+;
+
+CREATE TABLE vehicle_attr
+(
+   Vehicle_Code varchar(50),
+   Vehicle_Type varchar(50),
+   Total_KG_Vehicle decimal(18, 3),
+   Total_KG_Vehicle_Unit varchar(3),
+   Total_Volume_Vehicle decimal(18, 3),
+   Total_Volume_Vehicle_Unit varchar(3),
+   Volume decimal(18, 3),
+   Volume_Unit varchar(3),
+   Weight decimal(18, 3),
+   Weight_Unit varchar(3),
+   Plant varchar(4),
+   Create_Date date,
+   Create_Time date,
+   Flag smallint,
+   agentID varchar(50),
+   earliestDepartTime time,
+   latestArrivalTime time,
+   agentType varchar(10),
+   startLon varchar(25),
+   startLat varchar(25),
+   branchCode varchar(4),
+   endLon varchar(25),
+   endLat varchar(25)
+)
+;
