@@ -17,6 +17,9 @@ public class UserModel
   @SerializedName("UserData")
   @Expose
   private UserData userData;
+  @SerializedName("LogoutUser")
+  @Expose
+  private UserData logoutuser;
 
   public UserData getUserData() {
   return userData;  
@@ -25,4 +28,16 @@ public class UserModel
   public void setUserData(UserData userData) {
   this.userData = userData; 
   }
+
+	public
+	UserData getLogoutuser()
+	{
+		return logoutuser;
+	}
+
+	public
+	void setLogoutuser(UserData logoutuser)
+	{
+		this.logoutuser = logoutuser;
+	}
 }

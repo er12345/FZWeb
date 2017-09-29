@@ -23,4 +23,6 @@ public class FixMessege
 	public static final String strUploadFailed = "Upload data gagal";
 	public static final String strUploadSuccess = "Upload data sukses";
 	public static final String strUploadEmpty = "Upload data kosong";
+	public static final String strLogoutFailed = "Logout gagal";
+	public static final String strLogoutSuccess = "Logout sukses";
 }

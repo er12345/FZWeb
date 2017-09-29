@@ -26,21 +26,19 @@ public class UserLogic
   private ResponseMessege rspMsg;
   private StatusHolder sendRsp;
   private Connection conn;
-  private String Username;
 
-  public UserLogic(Connection conn, String Username)
+  public UserLogic(Connection conn)
   {
     this.conn = conn;
-    this.Username = Username;
   }
 
-  public StatusHolder Login(String Password)
+  public StatusHolder Login(String Username, String Password)
   {
     Integer rows;
     rspMsg = new ResponseMessege();
     sendRsp = new StatusHolder();
    
-    strQuery = "SELECT a.UserID, a.Name, a.Phone, a.lnkRoleID, b.Brand, b.Type, d.VehicleID, d.VehicleName FROM fbuser as a, " +
+    strQuery = "SELECT c.gbUserID as UserID, a.Name, a.Phone, a.lnkRoleID, b.Brand, b.Type, d.VehicleID, d.VehicleName FROM fbuser as a, " +
                 "fbdevice as b, gbuser AS c, fbvehicle AS d WHERE c.Username=\"" + Username + "\" AND c.Password=\"" +
                 Password + "\" AND a.lnkDeviceID=b.DeviceID AND a.gbUserID=c.gbUserID AND a.VehicleID=d.VehicleID";
 
@@ -62,7 +60,12 @@ public class UserLogic
       {
         sendRsp.setCode(FixValue.intResponSuccess);
         sendRsp.setRsp(rspMsg.LoginMsgResponse(FixValue.intSuccess, FixMessege.strLoginSuccess, res, rows));
-      }
+
+				strQuery = "UPDATE gbuser SET StartTime=CURRENT_TIMESTAMP()" + ", lnkLoginID=" + 
+									 FixValue.intLoginStatus + " WHERE Username=\"" + Username + "\" AND Password=\"" + Password + "\"";
+				
+				UpdateUserByUserID(strQuery);
+			}
     }
     catch (SQLException ex)
     {
@@ -72,4 +75,44 @@ public class UserLogic
 
     return sendRsp;
   }  
+
+  public StatusHolder logout(UserModel userModel)
+	{
+    rspMsg = new ResponseMessege();
+    sendRsp = new StatusHolder();
+   
+    strQuery = "UPDATE gbuser SET EndTime=CURRENT_TIMESTAMP()" + ", lnkLoginID=" + 
+							 FixValue.intLogoutStatus + " WHERE gbUserID=" + userModel.getLogoutuser().getUserid();
+		
+		if(!UpdateUserByUserID(strQuery))
+		{
+      sendRsp.setCode(FixValue.intResponFail);
+      sendRsp.setRsp(rspMsg.CoreMsgResponse(FixValue.intFail, FixMessege.strLogoutFailed));
+		}
+		else
+		{
+      sendRsp.setCode(FixValue.intResponSuccess);
+      sendRsp.setRsp(rspMsg.CoreMsgResponse(FixValue.intSuccess, FixMessege.strLogoutSuccess));
+		}
+		
+		return sendRsp;
+	}
+	
+	private boolean UpdateUserByUserID(String strQuery)
+	{
+    boolean success=true;
+    
+    try
+    {
+      st = conn.createStatement();
+  	  st.execute(strQuery);
+    }
+    catch (SQLException ex)
+    {
+      success = false;
+      System.out.println(ex.getMessage());
+    }
+    
+    return success;
+	}
 }

@@ -36,10 +36,10 @@ public class ReasonLogic
     sendRsp = new StatusHolder();
    
     if(ReasonID == 1)
-      strQuery = "SELECT FailID as ReasonID, FailName as ReasonName, FailDescription as ReasonDesc FROM reasonfail ORDER BY FailName DESC";
+      strQuery = "SELECT FailID as ReasonID, FailName as ReasonName, FailDescription as ReasonDesc FROM fbreasonfail ORDER BY FailName DESC";
     else
     if(ReasonID == 2)
-      strQuery = "SELECT LateID as ReasonID, LateName as ReasonName, LateDescription as ReasonDesc FROM reasonlate ORDER BY LateName DESC";
+      strQuery = "SELECT LateID as ReasonID, LateName as ReasonName, LateDescription as ReasonDesc FROM fbreasonlate ORDER BY LateName DESC";
 
     try
     {

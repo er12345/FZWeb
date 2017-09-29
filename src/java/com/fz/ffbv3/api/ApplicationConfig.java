@@ -30,10 +30,11 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
       resources.add(com.fz.ffbv3.api.ReasonApi.class);
       resources.add(com.fz.ffbv3.api.TaskApi.class);
+      resources.add(com.fz.ffbv3.api.TrackApi.class);
       resources.add(com.fz.ffbv3.api.UsersApi.class);
-        resources.add(com.fz.ffbv3.api.exampleAPI.APISample.class);
-        resources.add(com.fz.ffbv3.api.hvsEstmAPI.HvsEstmSaveAPI.class);
-        resources.add(com.fz.ffbv3.api.progresstack.ProgressTrack.class);
+      resources.add(com.fz.ffbv3.api.exampleAPI.APISample.class);
+      resources.add(com.fz.ffbv3.api.hvsEstmAPI.HvsEstmSaveAPI.class);
+      resources.add(com.fz.ffbv3.api.progresstack.ProgressTrack.class);
     }
     
 }

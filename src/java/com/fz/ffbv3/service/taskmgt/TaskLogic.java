@@ -97,7 +97,7 @@ public class TaskLogic
       {
         sendRsp.setCode(FixValue.intResponSuccess);
         sendRsp.setRsp(rspMsg.TaskListMsgResponse(conn, FixValue.intSuccess, FixMessege.strTaskSuccess, res, rows));
-        strQuery = "UPDATE fbjob SET takenDt=CURRENT_TIMESTAMP(), DoneStatus=\"DONE\" WHERE JobID=" + JobID;
+        strQuery = "UPDATE fbjob SET takenDt=CURRENT_TIMESTAMP(), DoneStatus=\"ASGN\" WHERE JobID=" + JobID;
         UpdateJobByJobID(strQuery);
       }
     }
