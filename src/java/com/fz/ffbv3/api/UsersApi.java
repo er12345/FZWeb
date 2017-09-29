@@ -82,13 +82,42 @@ public class UsersApi {
     
     if(conn != null)
     {
-      UserLogic userLogic = new UserLogic(conn, userModel.getUserData().getUsername()); 
-      statusHolder = userLogic.Login(userModel.getUserData().getPassword());
+      UserLogic userLogic = new UserLogic(conn); 
+      statusHolder = userLogic.Login(userModel.getUserData().getUsername(), userModel.getUserData().getPassword());
     }
     else
     {
       statusHolder.setCode(FixValue.intResponError);
       statusHolder.setRsp(new ResponseMessege().CoreMsgResponse(FixValue.intFail, FixMessege.strLoginFailed));
+    }
+    
+    dBConnector.CloseDatabase(conn);    
+    return Response.status(statusHolder.getCode()).entity(statusHolder.getRsp()).build();
+  }
+
+  @POST
+  @Path("logout")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response postLogoutJson(String content)
+  {
+		// Get Gson object and parse json string to object
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		UserModel userModel = gson.fromJson(content, UserModel.class);
+
+    DBConnector dBConnector = new DBConnector();
+    Connection conn = dBConnector.ConnectToDatabase();
+
+    StatusHolder statusHolder = new StatusHolder();
+    
+    if(conn != null)
+    {
+      UserLogic userLogic = new UserLogic(conn); 
+      statusHolder = userLogic.logout(userModel);
+    }
+    else
+    {
+      statusHolder.setCode(FixValue.intResponError);
+      statusHolder.setRsp(new ResponseMessege().CoreMsgResponse(FixValue.intFail, FixMessege.strLogoutFailed));
     }
     
     dBConnector.CloseDatabase(conn);    

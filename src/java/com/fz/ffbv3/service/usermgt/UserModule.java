@@ -110,6 +110,4 @@ public class UserModule
   {
     this.TimeTrackLocation = TimeTrackLocation;
   }
-
-  
 }

@@ -20,6 +20,9 @@ public class UserData
   @SerializedName("Password")
   @Expose
   private String password;
+  @SerializedName("UserID")
+  @Expose
+  private Integer userid;
 
   public String getUsername() {
   return username;
@@ -36,4 +39,14 @@ public class UserData
   public void setPassword(String password) {
   this.password = password;
   }
+
+	public Integer getUserid()
+	{
+		return userid;
+	}
+
+	public void setUserid(Integer userid)
+	{
+		this.userid = userid;
+	}
 }
