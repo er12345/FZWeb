@@ -54,19 +54,19 @@
             <a href="<%=get("hrefStop")%>" ><%=get("lblStop")%></a>
             <br>
             <label class="fzLabel">Run Date</label>
-            <input class="fzInput" type="text" id="msg" name="runDate" value="<%=get("runDate")%>" readonly="true">
+            <input class="fzInput" type="text" id="runDate" name="runDate" value="<%=get("runDate")%>" readonly="true">
             <br>
             <label class="fzLabel">Branch</label>
-            <input class="fzInput" type="text" id="msg" name="branch" value="<%=get("branch")%>" readonly="true">
+            <input class="fzInput" type="text" id="branch" name="branch" value="<%=get("branch")%>" readonly="true">
             <br>
             <label class="fzLabel">Shift</label>
-            <input class="fzInput" type="text" id="msg" name="shift" value="<%=get("shift")%>" readonly="true">
+            <input class="fzInput" type="text" id="shift" name="shift" value="<%=get("shift")%>" readonly="true">
             <br>
             <label class="fzLabel">Run Start Time</label>
-            <input class="fzInput" type="text" id="msg" name="runStartTime" value="<%=get("runStartTime")%>" readonly="true">
+            <input class="fzInput" type="text" id="runStartTime" name="runStartTime" value="<%=get("runStartTime")%>" readonly="true">
             <br>
             <label class="fzLabel">Run End Time</label>
-            <input class="fzInput" type="text" id="msg" name="runEndTime" value="<%=get("runEndTime")%>" readonly="true">
+            <input class="fzInput" type="text" id="msg" runEndTime="runEndTime" value="<%=get("runEndTime")%>" readonly="true">
             <br>
             <br>
             <%--<select name="item">

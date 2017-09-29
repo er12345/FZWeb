@@ -6,9 +6,12 @@
 package com.fz.tms.service.routing;
 
 import com.fz.generic.BusinessLogic;
+import com.fz.router.CustDelivery;
+import static com.fz.tms.service.routing.RoutingLogic.getDataCS;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
@@ -30,10 +33,12 @@ public class routingPre implements BusinessLogic {
     ) throws Exception {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate localDate = LocalDate.now();
-        request.setAttribute("txtDate"
-                                        , new Date().toString().substring(0, 10));
-        request.setAttribute("txtBranch"
-                                        , "0321");
+        
+        //List<CustDelivery> sr = getDataCS("2");
+        //request.setAttribute("coneResult", sr.size() > 0 ? "OK" : "ERROR");
+        
+        request.setAttribute("txtDate", new Date().toString().substring(0, 10));
+        request.setAttribute("txtBranch", "0321");
     }
     
 }

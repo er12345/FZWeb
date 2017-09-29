@@ -8,7 +8,6 @@ package com.fz.tms.service.routing;
 import com.fz.generic.Db;
 import com.fz.router.CustDelivery;
 import com.fz.router.DeliveryAgent;
-import com.fz.tms.constava;
 import com.fz.tms.model.Vehicle;
 import com.fz.tms.model.vehicle_attr;
 import java.sql.Connection;
@@ -32,7 +31,7 @@ public class RoutingDB {
         
         CustDelivery st = new CustDelivery();
         
-        try (Connection con = (new Db()).getConnection(constava.conSqlServer)){
+        try (Connection con = (new Db()).getConnection("sap/tms")){
             
             try (Statement stm = con.createStatement()){
                 try (ResultSet rs = stm.executeQuery(sql)){ 
@@ -113,7 +112,7 @@ public class RoutingDB {
         Vehicle g = new Vehicle();
         
         String sql = "select * from vehicle_attr;";
-        try (Connection con = (new Db()).getConnection(constava.conSqlServer)){            
+        try (Connection con = (new Db()).getConnection("sap/tms")){            
             try (Statement stm = con.createStatement()){
                 try (ResultSet rs = stm.executeQuery(sql)){                    
                     while (rs.next()){
@@ -154,7 +153,7 @@ public class RoutingDB {
         Vehicle v = new Vehicle();
         
         String sql = "select * from bosnet1.dbo.Vehicle;";
-        try (Connection con = (new Db()).getConnection(constava.conSqlServer)){            
+        try (Connection con = (new Db()).getConnection("sap/tms")){            
             try (Statement stm = con.createStatement()){
                 try (ResultSet rs = stm.executeQuery(sql)){  
                     while (rs.next()){  

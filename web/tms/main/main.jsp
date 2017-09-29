@@ -84,15 +84,15 @@
             <header>
                 <%@include file="../../ffbv3/appGlobal/bodyTop.jsp"%> 
             </header>
-            <p><font size="3">Menu</font></p
+            <p><font size="3">Menu</font></p>
             <nav>
                 <ul>
                     <%--<li><a href="#"><p>Home</p></a></li>--%>
                     <li><a href="../routing/routing.jsp"><p>Run Process</p></a></li>
-                    <li hidden="true"><a href="#"><p>View Run Process</p></a></li>
+                    <li hidden="true"><a href="../progress/progressView.jsp"><p>View Run Process</p></a></li>
                 </ul>
                 <ul>
-                    <li hidden="true"><a href="#"><p>View Task</p></a></li>
+                    <li hidden="true"><a href="../task/TaskFilter.jsp"><p>View Task</p></a></li>
                 </ul>
             </nav>
             <%--<iframe src="https://www.google.co.id" name="iframe1">

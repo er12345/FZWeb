@@ -11,7 +11,6 @@ import com.fz.generic.ReturnValue;
 import com.fz.router.CustDelivery;
 import com.fz.router.DeliveryAgent;
 import com.fz.router.Router;
-import com.fz.tms.constava;
 import com.fz.tms.model.tmProgress;
 import com.fz.tms.progress.progressLogic;
 import com.fz.util.FZUtil;
@@ -55,7 +54,7 @@ public class RoutingLogic implements BusinessLogic {
         String result = "";
         String sql = "";
         try{
-            runId = "20170924_141034658";//FZUtil.getTimeID();;
+            runId = FZUtil.getTimeID();//"20170924_141034658";
 
             List<CustDelivery> sr = getDataCS(shift);
             List<DeliveryAgent> da = getDataDA();
@@ -82,7 +81,7 @@ public class RoutingLogic implements BusinessLogic {
         String result = "";
         String sql = "";
         try{
-            runId = "20170924_141034658";//FZUtil.getTimeID();;
+            runId = FZUtil.getTimeID();//20170924_141034658
 
             List<CustDelivery> sr = getDataCS(shift);
             List<DeliveryAgent> da = getDataDA();

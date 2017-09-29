@@ -25,7 +25,7 @@ public class progressLogic {
         String sql = "";
         
         // get db con from pool
-        try (Connection con = (new Db()).getConnection("jdbc/fz")){            
+        try (Connection con = (new Db()).getConnection("sap/tms")){            
             try (Statement stm = con.createStatement()){
             
                 // create sql
@@ -66,7 +66,7 @@ public class progressLogic {
         String result = "";
         String sql = "";
         sql = "update tmprogress set mustFinish = 1 where  runId = ?";
-        try (Connection con = (new Db()).getConnection("jdbc/fz")){            
+        try (Connection con = (new Db()).getConnection("sap/tms")){            
             try (PreparedStatement ps = con.prepareStatement(sql)){
                 con.setAutoCommit(false);
                 ps.setString(1, str);

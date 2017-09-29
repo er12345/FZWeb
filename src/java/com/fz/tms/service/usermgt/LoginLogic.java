@@ -8,7 +8,6 @@ package com.fz.tms.service.usermgt;
 
 import com.fz.generic.BusinessLogic;
 import com.fz.generic.Db;
-import com.fz.tms.constava;
 import com.fz.util.FZUtil;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -41,7 +40,7 @@ public class LoginLogic implements BusinessLogic {
         String sql = "";
         
         // get db con from pool
-        try (Connection con = (new Db()).getConnection(constava.conMySql)){
+        try (Connection con = (new Db()).getConnection("jdbc/fz")){
             
             try (Statement stm = con.createStatement()){
             

@@ -50,7 +50,6 @@ public  class progress  implements BusinessLogic {
         
         try{
             List<tmProgress> tr = (List<tmProgress>) progressLogic.getData(rId);
-            
             request.setAttribute("runId", rId);
             request.setAttribute("status", tr.get(0).status);
             request.setAttribute("msg", tr.get(0).msg);
