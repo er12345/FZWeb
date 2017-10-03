@@ -32,7 +32,7 @@ public class TaskViewLogic implements BusinessLogic {
         //ResultSet rs = null;
         // construct sql
         String sql = "select a.JobID, a.PlanTruckID, a.DoneStatus JobStatus, v.VehicleName "
-                    +", b.TaskID, b.From1, b.To1, b.Start1, b.End1, b.DoneStatus TaskStatus "
+                    +", b.TaskID, b.From1, b.To1, b.PlanStart, b.PlanEnd, b.DoneStatus TaskStatus "
                     +", b.takenDt ActualStartTime, b.doneDt ActualEndTime"
                     +" from fbjob a "
                     +" inner join fbtask2 b on a.JobID=b.JobID"
@@ -54,8 +54,8 @@ public class TaskViewLogic implements BusinessLogic {
                             task.TaskType = "From " + rs.getString("From1")+" To "+rs.getString("To1");
                             task.From = rs.getString("From1");
                             task.To = rs.getString("To1");
-                            task.TargetStartTime = rs.getString("Start1");
-                            task.TargetEndTime = rs.getString("End1");
+                            task.TargetStartTime = rs.getString("PlanStart");
+                            task.TargetEndTime = rs.getString("PlanEnd");
                             //task.ActualStartTime = rs.getString("ActualStartTime");
                             //task.ActualEndTime = rs.getString("ActualEndTime");
                             task.JobStatus = rs.getString("JobStatus");
