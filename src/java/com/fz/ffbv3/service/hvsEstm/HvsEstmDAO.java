@@ -110,7 +110,7 @@ public class HvsEstmDAO {
         // prepare query
         String sql = "select hvsEstmDtlID"
                 + "\n, taskType"
-                + "\n, block"
+                + "\n, blocks"
                 + "\n, size1"
                 + "\n from fbHvsEstmDtl"
                 + "\n where hvsEstmID = ?"
@@ -166,7 +166,7 @@ public class HvsEstmDAO {
     private void add(HvsEstm he) throws Exception {
         
         // open db connection and 1 statement to insert header
-        String sql = "insert into fbHvsEstm(hvsDt, status, divID, createdBy)"
+        String sql = "insert into fbHvsEstm(hvsDt, status, divID, createBy)"
                 + " values(?,?,?,?)";
         try (
             Connection con = (new Db()).getConnection("jdbc/fz");
@@ -248,7 +248,7 @@ public class HvsEstmDAO {
         
         // create child sql
         String sql = "insert into fbHvsEstmDtl"
-                + "(taskType, block, size1, hvsEstmID)"
+                + "(taskType, blocks, size1, hvsEstmID)"
                 + " values(?,?,?,?)";
         try(PreparedStatement ps = con.prepareStatement(sql)){
 

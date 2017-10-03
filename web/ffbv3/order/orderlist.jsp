@@ -4,8 +4,10 @@
     Author     : Eko
 --%>
 
+<%@page import="com.fz.ffbv3.service.order.Order"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="../appGlobal/pageTop.jsp"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,24 +15,44 @@
         <title>Pick Order</title>
     </head>
     <body>
-       <%@include file="../appGlobal/pageTop.jsp"%>
+        <form action="orderlist.jsp" method="get">
+       <%@include file="../appGlobal/bodyTop.jsp"%>
+        <script>
+        $( function() {
+          $( "#tanggal" ).datepicker();
+          $( "#tanggal" ).datepicker( "option", "dateFormat", "yy-mm-dd");
+          $( "#tanggal" ).val(yyyymmddDate(new Date()));
+        } );
+<%run(new com.fz.ffbv3.service.order.OrderList());%>
+        </script>
         <h3>Pick Order</h3>
         <form action="" method="post">
-            <table>
+            <label class="fzlabel">Tanggal</label>
+            <input class="fzInput" id="tanggal" name="tanggal" value=""/>
+            
+            <br/> 
+            <br/>
+            <table border="1" class="table">
             <tr>
                 <th>BINE</th>
                 <th>Block #1</th>
                 <th>Block #2</th>
             </tr>
             <%
-                if (rs!=null) {
-                {
-                out.write("<tr><td>tes</td>");
-                out.write("<td>tes1</td>");
-                out.write("<td>tes2</td></tr>");
-                }
+                ArrayList<Order> ol = (ArrayList<Order>)request.getAttribute("res");
+                for (Order o : (List<Order>) getList("res")) { %>
+
+            <tr>
+                <td><%=o.divID%></td>
+                <td><%=o.blockId1%></td>
+                <td><%=o.blockId2%></td>
+            </tr>
+            <%
                 }
             %>
         </table>
+        </form>
+        <a href="order.jsp">Add</a>
+  <%@include file="../appGlobal/bodyBottom.jsp"%>
     </body>
 </html>
