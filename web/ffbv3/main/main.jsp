@@ -15,11 +15,11 @@
     <body>
   <%@include file="../appGlobal/bodyTop.jsp"%>
   <p>
-  <a href="../order/orderinput.jsp" >Order</a>
+  <a href="../order/orderlist.jsp" >Order</a>
   <br/>
   <a href="../vehicle/vehicleFilter.jsp" >Vehicle</a>
   <br/>
-  <a href="../estimationList/estimationList.jsp" >Estimation List</a>
+  <a href="../hvsEstm/hvsEstmFilter.jsp" >Estimation List</a>
   <br/>
   <a href="../taskView/taskViewFilter.jsp" >Task View</a>
   

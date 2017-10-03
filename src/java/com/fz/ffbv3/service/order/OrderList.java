@@ -10,6 +10,7 @@ import com.fz.generic.Db;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ public class OrderList implements BusinessLogic {
     public void run(HttpServletRequest request, HttpServletResponse response, PageContext pc) throws Exception {
         String sql = "";
         ResultSet rs = null;
+        ArrayList<Order> ol = null;
         
         // get db con from pool
         try (Connection con = (new Db()).getConnection("jdbc/fz")){
@@ -33,14 +35,25 @@ public class OrderList implements BusinessLogic {
             try (Statement stm = con.createStatement()){
             
                 // create sql
-                sql = "select userName from fbjob order by id desc";
+                sql = "select * from fbjob order by JobID desc";
 
                 // query
                 rs = stm.executeQuery(sql);
                 
-                request.getSession().setAttribute("rs", rs);
+                request.setAttribute("rs", rs);
                 
-                
+                if (rs!=null) {
+                    ol = new ArrayList<Order>();
+                    while (rs.next()) {
+                        Order or = new Order();
+                        or.divID = rs.getString("divID");
+                        or.blockId1 = rs.getString("blockId1");
+                        or.blockId2 = rs.getString("blockId2");
+                        //or.estTime = rs.getString("est_time");
+                        ol.add(or);
+                    }
+                    request.setAttribute("res", ol);
+                }
             }
         }
     }
