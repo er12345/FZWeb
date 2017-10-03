@@ -11,7 +11,7 @@ import javax.ws.rs.core.Application;
 /**
  *
  */
-@javax.ws.rs.ApplicationPath("api")
+@javax.ws.rs.ApplicationPath("api/v1")
 public class ApplicationConfig extends Application {
 
     @Override
@@ -28,9 +28,13 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(com.fz.ffbv3.api.exampleAPI.APISample.class);
-        resources.add(com.fz.ffbv3.api.hvsEstmAPI.HvsEstmSaveAPI.class);
-        resources.add(com.fz.ffbv3.api.progresstack.ProgressTrack.class);
+      resources.add(com.fz.ffbv3.api.ReasonApi.class);
+      resources.add(com.fz.ffbv3.api.TaskApi.class);
+      resources.add(com.fz.ffbv3.api.TrackApi.class);
+      resources.add(com.fz.ffbv3.api.UsersApi.class);
+      resources.add(com.fz.ffbv3.api.exampleAPI.APISample.class);
+      resources.add(com.fz.ffbv3.api.hvsEstmAPI.HvsEstmSaveAPI.class);
+      resources.add(com.fz.ffbv3.api.progresstack.ProgressTrack.class);
     }
     
 }
