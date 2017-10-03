@@ -15,22 +15,22 @@ import java.util.List;
  *
  * @author Agustinus Ignat
  */
-public class TrackingModel
+public class GraberModel
 {
-	@SerializedName("TrackingData")
+	@SerializedName("GraberData")
   @Expose
-  private TrackingData trackingData;
+  private TrackingData graberData;
+
+	public TrackingData getGraberData()
+	{
+		return graberData;
+	}
+
+	public void setGraberData(TrackingData graberData)
+	{
+		this.graberData = graberData;
+	}
 	
-	public TrackingData getTrackingData()
-	{
-		return trackingData;
-	}
-
-	public void setTrackingData(TrackingData trackingData)
-	{
-		this.trackingData = trackingData;
-	}
-
 /*
 	@SerializedName("TrackingData")
   @Expose

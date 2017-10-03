@@ -5,7 +5,10 @@
  */
 package com.fz.ffbv3.api;
 
+import com.fz.ffbv3.service.taskmgt.TaskLogic;
 import com.fz.ffbv3.service.taskmgt.UploadModel;
+import com.fz.ffbv3.service.trackmgt.GraberModel;
+import com.fz.ffbv3.service.trackmgt.TrackingLogic;
 import com.fz.ffbv3.service.trackmgt.TrackingModel;
 import com.fz.generic.DBConnector;
 import com.fz.generic.ResponseMessege;
@@ -78,8 +81,8 @@ public class TrackApi {
     
     if(conn != null)
     {
-//      TaskLogic taskLogic = new TaskLogic(conn, 0);
-//      statusHolder = taskLogic.TaskListUpload(uploadModel);
+      TrackingLogic trackingLogic = new TrackingLogic(conn);
+      statusHolder = trackingLogic.GPSDataUpload(trackingModel);
     }
     else
     {
@@ -88,6 +91,34 @@ public class TrackApi {
     }   
     
     dBConnector.CloseDatabase(conn);    
-    return Response.status(200).entity("Sukses").build(); 
+    return Response.status(statusHolder.getCode()).entity(statusHolder.getRsp()).build();
+  }
+
+  @POST
+  @Path("graber")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response postJsonGrabber(String content)
+  {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		GraberModel graberModel = gson.fromJson(content, GraberModel.class);
+
+    DBConnector dBConnector = new DBConnector();
+    Connection conn = dBConnector.ConnectToDatabase();
+
+    StatusHolder statusHolder = new StatusHolder();
+    
+    if(conn != null)
+    {
+      TrackingLogic trackingLogic = new TrackingLogic(conn);
+      statusHolder = trackingLogic.GPSGraberUpload(graberModel);
+    }
+    else
+    {
+      statusHolder.setCode(FixValue.intResponError);
+      statusHolder.setRsp(new ResponseMessege().CoreMsgResponse(FixValue.intFail, FixMessege.strUploadFailed));
+    }   
+    
+    dBConnector.CloseDatabase(conn);    
+    return Response.status(statusHolder.getCode()).entity(statusHolder.getRsp()).build();
   }
 }

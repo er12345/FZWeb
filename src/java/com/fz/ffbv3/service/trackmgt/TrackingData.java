@@ -16,13 +16,13 @@ public class TrackingData
 {
   @SerializedName("Latitude")
   @Expose
-  private Integer Latitude;
+  private String Latitude;
   @SerializedName("Longitude")
   @Expose
-  private Integer Longitude;
+  private String Longitude;
   @SerializedName("EndDate")
   @Expose
-  private Integer EndDate;
+  private String EndDate;
   @SerializedName("UserID")
   @Expose
   private Integer UserID;
@@ -30,62 +30,52 @@ public class TrackingData
   @Expose
   private Integer VehicleID;
 
-	public
-	Integer getLatitude()
+	public String getLatitude()
 	{
 		return Latitude;
 	}
 
-	public
-	void setLatitude(Integer Latitude)
+	public void setLatitude(String Latitude)
 	{
 		this.Latitude = Latitude;
 	}
 
-	public
-	Integer getLongitude()
+	public String getLongitude()
 	{
 		return Longitude;
 	}
 
-	public
-	void setLongitude(Integer Longitude)
+	public void setLongitude(String Longitude)
 	{
 		this.Longitude = Longitude;
 	}
 
-	public
-	Integer getEndDate()
+	public String getEndDate()
 	{
 		return EndDate;
 	}
 
-	public
-	void setEndDate(Integer EndDate)
+	public void setEndDate(String EndDate)
 	{
 		this.EndDate = EndDate;
 	}
 
-	public
-	Integer getUserID()
+	public Integer getUserID()
 	{
 		return UserID;
 	}
 
-	public
-	void setUserID(Integer UserID)
+	public void setUserID(Integer UserID)
 	{
 		this.UserID = UserID;
 	}
 
-	public
-	Integer getVehicleID()
+	public Integer getVehicleID()
 	{
 		return VehicleID;
 	}
 
-	public
-	void setVehicleID(Integer VehicleID)
+	public void setVehicleID(Integer VehicleID)
 	{
 		this.VehicleID = VehicleID;
 	}
