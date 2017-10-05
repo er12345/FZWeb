@@ -29,6 +29,12 @@ public class TrackingData
   @SerializedName("VehicleID")
   @Expose
   private Integer VehicleID;
+  @SerializedName("Name")
+  @Expose
+  private String Name;
+  @SerializedName("Division")
+  @Expose
+  private Integer Division;
 
 	public String getLatitude()
 	{
@@ -78,5 +84,25 @@ public class TrackingData
 	public void setVehicleID(Integer VehicleID)
 	{
 		this.VehicleID = VehicleID;
+	}
+
+	public String getName()
+	{
+		return Name;
+	}
+
+	public void setName(String Name)
+	{
+		this.Name = Name;
+	}
+
+	public Integer getDivision()
+	{
+		return Division;
+	}
+
+	public void setDivision(Integer Division)
+	{
+		this.Division = Division;
 	}
 }

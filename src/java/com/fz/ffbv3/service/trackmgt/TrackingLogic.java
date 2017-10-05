@@ -38,7 +38,7 @@ public class TrackingLogic
     rspMsg = new ResponseMessege();
     sendRsp = new StatusHolder();
    
-    strQuery = "INSERT INTO fbGPSTracker(Latitude, Longitude, EndDate, UserID, Vehicle, Status) VALUES('" + trackingModel.getTrackingData().getLatitude() +
+    strQuery = "INSERT INTO fbGPSTracker(Latitude, Longitude, EndDate, UserID, VehicleID, Status) VALUES('" + trackingModel.getTrackingData().getLatitude() +
 							 "', '" + trackingModel.getTrackingData().getLongitude() + "', '" + trackingModel.getTrackingData().getEndDate() +
 							 "', " + trackingModel.getTrackingData().getUserID() + ", " + trackingModel.getTrackingData().getVehicleID() + ", 1)";
 
@@ -64,8 +64,9 @@ public class TrackingLogic
     rspMsg = new ResponseMessege();
     sendRsp = new StatusHolder();
    
-    strQuery = "INSERT INTO fbGPSGraber(Latitude, Longitude, EndDate, Status) VALUES('" + graberModel.getGraberData().getLatitude() +
-							 "', '" + graberModel.getGraberData().getLongitude() + "', '" + graberModel.getGraberData().getEndDate() + "', 1)";
+    strQuery = "INSERT INTO fbGPSGraber(Latitude, Longitude, EndDate, Name, Division, Status) VALUES('" + graberModel.getGraberData().getLatitude() +
+							 "', '" + graberModel.getGraberData().getLongitude() + "', '" + graberModel.getGraberData().getEndDate() + "', '" +
+							 graberModel.getGraberData().getName() + "', " + graberModel.getGraberData().getDivision() + ", 1)";
 
     try
     {
