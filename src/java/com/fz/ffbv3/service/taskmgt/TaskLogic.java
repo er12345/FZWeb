@@ -39,7 +39,7 @@ public class TaskLogic
     Integer rows;
     Integer JobID;
     
-    strQuery = "SELECT JobID FROM fbjob WHERE assignedDt=(SELECT MIN(assignedDt) FROM fbjob WHERE ActualTruckID=" + TruckID + " AND DoneStatus='ASGN')";
+    strQuery = "SELECT JobID FROM fbjob WHERE ActualTruckID=" + TruckID + " AND assignedDt=(SELECT MIN(assignedDt) FROM fbjob WHERE ActualTruckID=" + TruckID + " AND DoneStatus='ASGN')";
 
     try
     {
