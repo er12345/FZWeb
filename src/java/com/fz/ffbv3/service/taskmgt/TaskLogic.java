@@ -71,8 +71,8 @@ public class TaskLogic
     strQuery = "SELECT a.divID, a.JobID, b.TaskID, b.From1 as 'From', b.To1 as 'To', DATE_FORMAT(b.PlanStart, " +
                "'%Y-%m-%d %H:%i:%s') as Start, DATE_FORMAT(b.PlanEnd, '%Y-%m-%d %H:%i:%s') as End, b.Tonnage, b.Blocks " +
                "FROM fbjob AS a, fbtask2 AS b, fbvehicle as c " +
-               "WHERE a.JobID=b.JobID AND a.ActualTruckID=c.VehicleID AND a.JobID=(SELECT JobID FROM fbjob WHERE " + 
-               "assignedDt=(SELECT MIN(assignedDt) FROM fbjob WHERE ActualTruckID=" + TruckID + "))";
+               "WHERE a.JobID=b.JobID AND a.ActualTruckID=c.VehicleID AND a.ActualTruckID=" + TruckID + " AND a.JobID=(SELECT JobID FROM fbjob WHERE " + 
+               "assignedDt=(SELECT MIN(assignedDt) FROM fbjob WHERE ActualTruckID=" + TruckID + ") AND ActualTruckID=" + TruckID + ")";
 /*
     strQuery = "SELECT a.divID, a.JobID, b.TaskID, b.From1 as 'From', b.To1 as 'To', DATE_FORMAT(b.PlanStart, " +
                "'%Y-%m-%d %H:%i:%s') as Start, DATE_FORMAT(b.PlanEnd, '%Y-%m-%d %H:%i:%s') as End, b.Tonnage, b.Blocks " +
@@ -136,7 +136,7 @@ public class TaskLogic
     boolean success=true;
     String setUpdate;
     UploadPlanData uploadPlanData = new UploadPlanData();
-    Integer mJobID=0;
+    Integer mJobID=0, VehicleID=0;
     
     if(uploadModel.getUploadData().isEmpty())
     {
@@ -164,6 +164,7 @@ public class TaskLogic
         }
       
         mJobID = uploadPlanData.getJobID();
+				VehicleID = uploadPlanData.getVehicleID();
       }
     }
       
@@ -173,12 +174,13 @@ public class TaskLogic
       {
         sendRsp.setCode(FixValue.intResponSuccess);
         sendRsp.setRsp(rspMsg.CoreMsgResponse(FixValue.intSuccess, FixMessege.strUploadSuccess));
+				UpdateVehicleByVehicleID(VehicleID);
       }
       else
       {
         sendRsp.setCode(FixValue.intResponFail);
         sendRsp.setRsp(rspMsg.CoreMsgResponse(FixValue.intFail, FixMessege.strUploadFailed));
-      }
+      }			
     }
     else
     {
@@ -207,5 +209,20 @@ public class TaskLogic
     }
     
     return success;
+  }
+
+  private void UpdateVehicleByVehicleID(Integer VehicleID)
+  {
+    strQuery = "UPDATE fbvehicle SET Status=\"AVLB\" WHERE VehicleID=" + VehicleID;
+
+    try
+    {
+      st = conn.createStatement();
+  	  st.execute(strQuery);
+    }
+    catch (SQLException ex)
+    {
+      System.out.println(ex.getMessage());
+    }
   }
 }

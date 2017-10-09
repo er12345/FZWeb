@@ -39,6 +39,9 @@ public class UploadPlanData
   @SerializedName("ReasonID")
   @Expose
   private Integer reasonID;
+  @SerializedName("VehicleID")
+  @Expose
+  private Integer vehicleID;
 
   public Integer getJobID() {
   return jobID;
@@ -107,6 +110,18 @@ public class UploadPlanData
   {
     this.ActualEnd = ActualEnd;
   }
+
+	public
+	Integer getVehicleID()
+	{
+		return vehicleID;
+	}
+
+	public
+	void setVehicleID(Integer vehicleID)
+	{
+		this.vehicleID = vehicleID;
+	}
   
   
 }
