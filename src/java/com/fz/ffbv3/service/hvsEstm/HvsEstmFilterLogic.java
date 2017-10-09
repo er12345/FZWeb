@@ -42,11 +42,22 @@ public class HvsEstmFilterLogic implements BusinessLogic {
             // finish
             return;
         }
+        // if add clicked
+        else if (submit.equals("run")){
+        }
 
         // if reach here, search is clicked
         // get filter criteria
         String harvestDate = FZUtil.getHttpParam(request, "hvsDt").trim();
         String divID = FZUtil.getHttpParam(request, "divID").trim().toUpperCase();
+        
+        // if not in param
+        if (harvestDate.length() == 0){
+            
+            // try in attribute
+            harvestDate = (String) request.getAttribute("hvsDt");
+            divID = (String) request.getAttribute("divID");
+        }
         
         // handle security
         if (divID.length() > 10) throw new Exception("Division too long");

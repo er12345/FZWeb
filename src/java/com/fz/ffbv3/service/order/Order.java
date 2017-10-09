@@ -5,14 +5,22 @@
  */
 package com.fz.ffbv3.service.order;
 
+import com.fz.ffbv3.service.task.Task;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Eko
  */
 public class Order {
+    public String JobID = "";
     public String divID="";
+    public int JobSeq=0;
+    public String TruckID="";
     public String blockId1 = "";
     public String blockId2 = "";
     public String estTime = "";
     public String DoneStatus="";
+    public List<Task> tasks = new ArrayList<Task>();
 }

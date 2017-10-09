@@ -24,9 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.PageContext;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  *
@@ -180,15 +177,15 @@ public class FZUtil {
         return id;
     }
     
-    public static ResultSet queryToRecordSet(String sql, Statement st) throws Exception {
-        try {
-            ResultSet rs = st.executeQuery(sql);
-            return rs;
-        }
-        catch (Exception e){
-            throw new Exception(e.getMessage() + " ; SQL = " + sql);
-        }
-    }
+//    public static ResultSet queryToRecordSet(String sql, Statement st) throws Exception {
+//        try {
+//            ResultSet rs = st.executeQuery(sql);
+//            return rs;
+//        }
+//        catch (Exception e){
+//            throw new Exception(e.getMessage() + " ; SQL = " + sql);
+//        }
+//    }
     
     public static void queryExecute(Connection con, String sql) 
             throws Exception {
@@ -197,10 +194,11 @@ public class FZUtil {
             if (con == null) throw new Exception("Connection is null");
             if (con.isClosed()) throw new Exception("Connection is closed");
             
-            Statement st = con.createStatement();
-            st.executeUpdate(sql);
-            st.close();
-            st = null;
+            try (Statement st = con.createStatement()){
+                st.executeUpdate(sql);
+            }
+//            st.close();
+//            st = null;
             
         }
         catch (Exception e){
@@ -216,23 +214,26 @@ public class FZUtil {
             if (con.isClosed()) throw new Exception("Connection is closed");
             
             ArrayList<String[]> result = new ArrayList<String[]>();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            ResultSetMetaData rsm = rs.getMetaData();
-            int colCount = rsm.getColumnCount();
             
-            while (rs.next()){
-                String[] flds = new String[colCount];
-                for (int i=0; i< colCount; i++){
-                    flds[i] = rs.getString(i+1);
+            try (Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+                
+                ResultSetMetaData rsm = rs.getMetaData();
+                int colCount = rsm.getColumnCount();
+
+                while (rs.next()){
+                    String[] flds = new String[colCount];
+                    for (int i=0; i< colCount; i++){
+                        flds[i] = rs.getString(i+1);
+                    }
+                    result.add(flds);
                 }
-                result.add(flds);
             }
-            // clean up
-            rs.close();
-            st.close();
-            rs = null;
-            st = null;
+//            // clean up
+//            rs.close();
+//            st.close();
+//            rs = null;
+//            st = null;
             
             return result;
         }
@@ -309,56 +310,56 @@ public class FZUtil {
         }
     }
     
-    public static JSONObject queryToJsonObject(Connection con, String sql)
-            throws Exception {
-        try {
-            if (con == null) throw new Exception("Connection is null");
-            if (con.isClosed()) throw new Exception("Connection is closed");
-            
-            StringBuffer sbField = new StringBuffer();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            
-            // create field names
-            ResultSetMetaData rsm = rs.getMetaData();
-            int colCount = rsm.getColumnCount();
-            JSONArray jsonFieldNames = new JSONArray();
-            for (int i=0; i< colCount; i++){
-                jsonFieldNames.put(rsm.getColumnName(i+1));
-            }
-            
-            // create rows
-            JSONArray jsonRecords = new JSONArray();
-            while (rs.next()){
-                
-                // start record
-                JSONArray jsonRecord = new JSONArray();
-                
-                // add fields
-                for (int i=0; i< colCount; i++){
-                    jsonRecord.put(rs.getString(i+1));
-                }
-                
-                // close record
-                jsonRecords.put(jsonRecord);
-            }
-            
-            // clean up
-            rs.close();
-            st.close();
-            rs = null;
-            st = null;
-            
-            // concat fields & records JSON
-            JSONObject jsonAll = new JSONObject();
-            jsonAll.put("fieldsNames", jsonFieldNames);
-            jsonAll.put("records", jsonRecords);
-            return jsonAll;
-        }
-        catch (Exception e){
-            throw new Exception(e.getMessage() + " ; SQL = " + sql);
-        }
-    }
+//    public static JSONObject queryToJsonObject(Connection con, String sql)
+//            throws Exception {
+//        try {
+//            if (con == null) throw new Exception("Connection is null");
+//            if (con.isClosed()) throw new Exception("Connection is closed");
+//            
+//            StringBuffer sbField = new StringBuffer();
+//            Statement st = con.createStatement();
+//            ResultSet rs = st.executeQuery(sql);
+//            
+//            // create field names
+//            ResultSetMetaData rsm = rs.getMetaData();
+//            int colCount = rsm.getColumnCount();
+//            JSONArray jsonFieldNames = new JSONArray();
+//            for (int i=0; i< colCount; i++){
+//                jsonFieldNames.put(rsm.getColumnName(i+1));
+//            }
+//            
+//            // create rows
+//            JSONArray jsonRecords = new JSONArray();
+//            while (rs.next()){
+//                
+//                // start record
+//                JSONArray jsonRecord = new JSONArray();
+//                
+//                // add fields
+//                for (int i=0; i< colCount; i++){
+//                    jsonRecord.put(rs.getString(i+1));
+//                }
+//                
+//                // close record
+//                jsonRecords.put(jsonRecord);
+//            }
+//            
+//            // clean up
+//            rs.close();
+//            st.close();
+//            rs = null;
+//            st = null;
+//            
+//            // concat fields & records JSON
+//            JSONObject jsonAll = new JSONObject();
+//            jsonAll.put("fieldsNames", jsonFieldNames);
+//            jsonAll.put("records", jsonRecords);
+//            return jsonAll;
+//        }
+//        catch (Exception e){
+//            throw new Exception(e.getMessage() + " ; SQL = " + sql);
+//        }
+//    }
     
     public static String queryToItem(Connection con, String sql
             , String default1) 
@@ -476,7 +477,7 @@ public class FZUtil {
         
     }
     
-    public boolean isValidDate(String dateString) {
+    public static boolean isValidDate(String dateString) {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         try {
             df.parse(dateString);
@@ -484,5 +485,51 @@ public class FZUtil {
         } catch (Exception e) {
             return false;
         }
+    }
+    
+    public static String getRsString(
+        ResultSet rs, int pos, String defaultVal) 
+            throws Exception {
+        String v = rs.getString(pos);
+        if (v == null) v = defaultVal;
+        if (v.length() == 0) v = defaultVal;
+        return v;
+    }
+    
+    public static int getRsInt(
+        ResultSet rs, int pos, int defaultVal) 
+            throws Exception {
+        int v = rs.getInt(pos);
+        return (rs.wasNull() ? defaultVal : v);
+    }
+    
+    public static double getRsDouble(
+        ResultSet rs, int pos, double defaultVal) 
+            throws Exception {
+        double v = rs.getDouble(pos);
+        return (rs.wasNull() ? defaultVal : v);
+    }
+    
+    public static double getRsDoubleErr(ResultSet rs, int pos, String errMsg) 
+            throws Exception {
+        try {
+            double d = Double.parseDouble(rs.getString(pos));
+            return d;
+        } catch(Exception e){
+            throw new Exception(errMsg);
+        }
+    }
+    
+    public static java.sql.Timestamp toSQLTimeStamp(String dateStr, String formatStr)
+        throws Exception {
+        java.text.DateFormat format = new java.text.SimpleDateFormat(formatStr);
+        java.util.Date date = format.parse(dateStr);
+        java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+        return timestamp;
+    }
+    
+    public static java.sql.Timestamp getCurSQLTimeStamp()
+        throws Exception {
+        return new java.sql.Timestamp(System.currentTimeMillis());
     }
 }

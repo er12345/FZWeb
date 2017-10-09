@@ -7,6 +7,7 @@
 package com.fz.ffbv3.service.hvsEstm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -18,5 +19,7 @@ public class HvsEstm {
     public String divID = "";
     public double kg = 0;
     public String hvsEstmID = "";
+    public Location millLoc = new Location();
     public List<HvsEstmDtl> dtl = new ArrayList<HvsEstmDtl>();
+    public HashMap<String, String> params = new HashMap<String, String>();
 }

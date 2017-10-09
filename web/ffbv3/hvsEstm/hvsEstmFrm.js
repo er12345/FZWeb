@@ -25,13 +25,14 @@
     jQuery.fn.pop = [].pop;
     jQuery.fn.shift = [].shift;
 
-    function callServer(jsonForServer){
+    function callServer(jsonForServer, saveType){
         
         $.get( $apiAddress, {json : jsonForServer})
             .done(function( data ) {
                 if (data.success){
                     alert('Success');
                     $('#errMsg').html('');
+                    $('#status').text(saveType);
                 }
                 else{
                     alert('Error');
@@ -45,13 +46,7 @@
 
     function save(saveType) {
         var $rows = $TABLE.find('tr:not(:hidden)');
-//        var headers = [];
         var data = [];
-
-//        // Get the headers (add special header logic here)
-//        $($rows.shift()).find('th:not(:empty)').each(function () {
-//          headers.push($(this).text().toLowerCase());
-//        });
 
         // Turn all existing rows into a loopable array
         var i = 0;
@@ -85,10 +80,13 @@
                 ;
                 
         // uncomment to debug
-        //$('#debug').text(jsonForServer);
+        $('#debug').text(jsonForServer);
+        
+        $('#json').val(jsonForServer);
   
         // call server
-        callServer(jsonForServer);
+        //callServer(jsonForServer, saveType);
+        $("#form1").submit();
     };
 
     $("#saveDrftBtn").click(function(){save('DRFT');});

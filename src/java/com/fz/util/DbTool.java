@@ -6,6 +6,7 @@
 
 package com.fz.util;
 
+import com.fz.util.FZUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

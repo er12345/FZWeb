@@ -26,7 +26,6 @@
   } );
   </script>
         <h3>Estimation Form</h3>
-        <form class="container" action="hvsEstmFrmProcess.jsp" method="post">
             <div class="fzErrMsg" id="errMsg">
                 <%=get("errMsg")%>
             </div>
@@ -73,11 +72,18 @@
                         <td contenteditable="true" class="fzCell celVal"><%=hd.getBlock()%></td>
                         <td contenteditable="true" class="fzCell celVal"><%=hd.getSizeString()%></td>
                         <td class="fzCell">
-                          <span class="table-up fzTextButton">Up</span>
-                          <span class="table-down fzTextButton">Down</span>
-                          <span class="table-remove ">Del</span>
+                            <span class="table-up fzTextButton">Up</span>
+                            <span class="table-down fzTextButton">Down</span>
+
+                            <%if (!get("status").equals("FNAL")) { %>
+
+                                <span class="table-remove ">Del</span>
+
+                            <% } /* if get status */ %>
+
                         </td>
                     </tr>
+                    
                   <% } /* end for HvsElmDtl */ %>
                         
                   <!-- clonable table line -->
@@ -97,19 +103,32 @@
                       </td>
                   </tr>
               </table>
-              &nbsp;&nbsp;<span class="table-add fzTextButton">Add</span>
+                  
+              <%if (!get("status").equals("FNAL")) { %>
+              
+                    &nbsp;&nbsp;<span class="table-add fzTextButton">Add</span>
+                    
+              <% } /* if get status */ %>
+              
             </div>
-        </form>         
+              
+        <form id="form1" class="container" action="hvsEstmFrmProcess.jsp" 
+              target="blank" method="get">
+            <input id="json" name="json" type="hidden">
+        </form>
                   
         <br>
-        <button class="btn fzButton" type="button" 
-                name="saveDrftBtn" id="saveDrftBtn" value="save">Save Draft</button>
-        <button class="btn fzButton" type="button" 
-                name="saveFnalBtn" id="saveFnalBtn" value="save">Save Final</button>
-                
+        <%if (!get("status").equals("FNAL")) { %>
+        
+            <button class="btn fzButton" type="button" 
+                    name="saveDrftBtn" id="saveDrftBtn" value="save">Save Draft</button>
+            <button class="btn fzButton" type="button" 
+                    name="saveFnalBtn" id="saveFnalBtn" value="save">Save Final</button>
+                    
+        <% } /* if get status */ %>
         <div id="debug"></div>
         
-      <script src='hvsEstmFrm.js?4'></script>
+      <script src='hvsEstmFrm.js?9'></script>
       
 <%@include file="../appGlobal/bodyBottom.jsp"%>
     </body>

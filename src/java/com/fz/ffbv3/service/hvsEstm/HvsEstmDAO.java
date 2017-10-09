@@ -11,9 +11,11 @@ import com.fz.util.FZUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -26,12 +28,20 @@ public class HvsEstmDAO {
         
         HvsEstm he = null;
         
-        String sql = "select date_format(hvsDt, '%Y-%m-%d')"
-                + ", divID"
-                + ", hvsEstmID"
-                + ", status"
-                + " from fbHvsEstm"
-                + " where hvsEstmID = ?";
+        String sql = 
+                "select"
+                + " date_format(h.hvsDt, '%Y-%m-%d')"
+                + "\n, h.divID"
+                + "\n, h.hvsEstmID"
+                + "\n, h.status"
+                + "\n, m.lon"
+                + "\n, m.lat"
+                + "\n from fbHvsEstm h"
+                + "\n     left outer join fbDiv d"
+                + "\n         on h.divID = d.divID"
+                + "\n     left outer join fbMill m"
+                + "\n         on d.millID = m.millID"
+                + "\n where h.hvsEstmID = ?";
 
         try (Connection con = (new Db()).getConnection("jdbc/fz");){
 
@@ -46,30 +56,36 @@ public class HvsEstmDAO {
         return he;
     }
     
-    public HvsEstm loadByDateAndDiv(String hvsDate, String divID) 
+    public HvsEstm loadByDateAndDiv(String hvsDate, String divID
+        , Connection con) 
             throws Exception {
         
         HvsEstm he = null;
         
-        String sql = "select date_format(hvsDt, '%Y-%m-%d')"
-                + ", divID"
-                + ", hvsEstmID"
-                + ", status"
-                + " from fbHvsEstm"
-                + " where hvsDt = ?"
-                + " and divID = ?"
+        String sql =
+                "select"
+                + "\n date_format(h.hvsDt, '%Y-%m-%d')"
+                + "\n, h.divID"
+                + "\n, h.hvsEstmID"
+                + "\n, h.status"
+                + "\n, m.lon"
+                + "\n, m.lat"
+                + "\n from fbHvsEstm h"
+                + "\n     left outer join fbDiv d"
+                + "\n         on h.divID = d.divID"
+                + "\n     left outer join fbMill m"
+                + "\n         on d.millID = m.millID"
+                + "\n where h.hvsDt = ?"
+                + "\n and h.divID = ?"
                 ;
 
-        try (Connection con = (new Db()).getConnection("jdbc/fz");){
+        try (PreparedStatement ps = con.prepareStatement(sql)){
 
-            try (PreparedStatement ps = con.prepareStatement(sql)){
+            // query hvsEstm
+            ps.setString(1, hvsDate);
+            ps.setString(2, divID);
+            he = loadSelfAndChildren(con, ps);
 
-                // query hvsEstm
-                ps.setString(1, hvsDate);
-                ps.setString(2, divID);
-                he = loadSelfAndChildren(con, ps);
-
-            }
         }
         return he;
     }
@@ -91,6 +107,8 @@ public class HvsEstmDAO {
                 he.divID = rs.getString(2);
                 he.hvsEstmID = rs.getString(3);
                 he.status = rs.getString(4);
+                he.millLoc.x = rs.getString(5);
+                he.millLoc.y = rs.getString(5);
 
                 // get the details
                 loadChildren(he, con);
@@ -108,11 +126,17 @@ public class HvsEstmDAO {
             throws Exception {
         
         // prepare query
-        String sql = "select hvsEstmDtlID"
-                + "\n, taskType"
-                + "\n, blocks"
-                + "\n, size1"
-                + "\n from fbHvsEstmDtl"
+        String sql = "select d.hvsEstmDtlID"
+                + "\n, d.taskType"
+                + "\n, d.block"
+                + "\n, d.size1"
+                + "\n, b.x1"
+                + "\n, b.y1"
+                + "\n, b.x2"
+                + "\n, b.y2"
+                + "\n from fbHvsEstmDtl d"
+                + "\n   left outer join fbBlock b"
+                + "\n       on d.block = b.blockID"
                 + "\n where hvsEstmID = ?"
                 + "\n order by estmSeq";
         
@@ -128,9 +152,16 @@ public class HvsEstmDAO {
                     // populate object with database data
                     HvsEstmDtl hed = new HvsEstmDtl();
                     hed.hveEstmDtlID = rs.getString(1);
+                    hed.parent = he;
                     hed.taskType = rs.getString(2);
                     hed.block = rs.getString(3);
                     hed.size1 = rs.getDouble(4);
+                    
+                    hed.loc1.x =  rs.getString(5);
+                    hed.loc1.y =  rs.getString(6);
+                    
+                    hed.loc2.x =  rs.getString(5);
+                    hed.loc2.y =  rs.getString(6);
                     
                     // add to list
                     he.dtl.add(hed);
@@ -141,24 +172,30 @@ public class HvsEstmDAO {
     }
     
     public void save(HvsEstm heEntered) throws Exception {
-
-        HvsEstm heExist = this.loadByDateAndDiv(heEntered.hvsDate
-                , heEntered.divID);
-
-        // if not exist, add
-        if (heExist == null){
-            add(heEntered);
-        }
-        else { // else, update
+        
+        // check duplicate bloc
+        validateBlock(heEntered);
+        
+        try (Connection con = (new Db()).getConnection("jdbc/fz");){
             
-            // if already final, cannot
-            if (heExist.status.equals("FNAL")){
-                throw new Exception("Already final, cannot save again.");
+            HvsEstm heExist = this.loadByDateAndDiv(heEntered.hvsDate
+                    , heEntered.divID, con);
+
+            // if not exist, add
+            if (heExist == null){
+                add(heEntered);
             }
-            else {
-                // else, not final
-                heEntered.hvsEstmID = heExist.hvsEstmID;
-                update(heEntered);
+            else { // else, update
+
+                // if already final, cannot
+                if (heExist.status.equals("FNAL")){
+                    throw new Exception("Already final, cannot save again.");
+                }
+                else {
+                    // else, not final
+                    heEntered.hvsEstmID = heExist.hvsEstmID;
+                    update(heEntered);
+                }
             }
         }
             
@@ -166,7 +203,7 @@ public class HvsEstmDAO {
     private void add(HvsEstm he) throws Exception {
         
         // open db connection and 1 statement to insert header
-        String sql = "insert into fbHvsEstm(hvsDt, status, divID, createBy)"
+        String sql = "insert into fbHvsEstm(hvsDt, status, divID, createdBy)"
                 + " values(?,?,?,?)";
         try (
             Connection con = (new Db()).getConnection("jdbc/fz");
@@ -194,6 +231,7 @@ public class HvsEstmDAO {
             }
 
             insertNewChildren(he, con);
+            checkChildrenBelongToDiv(he, con);
             
             // commit transaction
             con.setAutoCommit(true);
@@ -226,6 +264,7 @@ public class HvsEstmDAO {
 
             deleteOldChildren(he, con);
             insertNewChildren(he, con);
+            checkChildrenBelongToDiv(he, con);
 
             // commit transaction
             con.setAutoCommit(true);
@@ -248,7 +287,7 @@ public class HvsEstmDAO {
         
         // create child sql
         String sql = "insert into fbHvsEstmDtl"
-                + "(taskType, blocks, size1, hvsEstmID)"
+                + "(taskType, block, size1, hvsEstmID)"
                 + " values(?,?,?,?)";
         try(PreparedStatement ps = con.prepareStatement(sql)){
 
@@ -333,5 +372,108 @@ public class HvsEstmDAO {
             }
         }
         return heList;
+    }
+
+//    public void loadByDateAndDivList(FB2RunInput runInput, RunContext cx)
+//            throws Exception {
+//        
+//        // create div id list for sql
+//        StringBuffer divIDList = new StringBuffer();
+//        for (String divID : runInput.divList){
+//            
+////            if (divIDList.length() > 0)
+////                divIDList.append(",");
+////            
+////            divIDList.append("'" + divID + "'");
+////            
+//            HvsEstmDAO heDAO = new HvsEstmDAO();
+//            HvsEstm he = heDAO.loadByDateAndDiv(runInput.hvsDate, divID
+//                    , cx.con);
+//            cx.hvsEstms.add(he);
+//        }
+//        
+////        // create the sql
+////        String sql = "select "
+////                + "\n he.divID"
+////                + "\n, hed.block"
+////                + "\n, hed.size1"
+////                + "\n, hed.taskType"
+////                + "\n from hvsEstm he"
+////                + "\n   inner join hvsEstmDtl hed"
+////                + "\n         on he.hvsEstID = hed.hvsEstmID"
+////                + "\n where he.hvsEstmDt = ?"
+////                + "\n   and hed.divID in (" + divIDList + ")"
+////                + "\n order by "
+////                + "\n   he.divID"
+////                + "\n   , hed.block"
+////                ;
+////        
+////        // get data
+////        try (PreparedStatement ps = cx.con.prepareStatement(sql)){
+////            ps.setDate(1, java.sql.Date.valueOf(runInput.hvsDate));
+////            try (ResultSet rs = ps.executeQuery()){
+////                while (rs.next()){
+////                    
+////                }
+////            }
+////        }
+//    }
+
+    private void checkChildrenBelongToDiv(HvsEstm he, Connection con)
+    throws Exception {
+        
+        String sql = "select "
+                + "\n he.divID"
+                + "\n, hed.block"
+                + "\n from fbHvsEstm he"
+                + "\n   left outer join fbHvsEstmDtl hed"
+                + "\n       on he.hvsEstmID = hed.hvsEstmID"
+                + "\n   left outer join fbBlock b"
+                + "\n       on hed.block = b.blockID"
+                + "\n       and he.divID = b.divID"
+                + "\n where he.hvsEstmID = ?"
+                + "\n   and b.blockID is null" 
+                ;
+        
+        // prepare sql db con & sql statement
+        try (
+                PreparedStatement ps = con.prepareStatement(sql)
+                ){
+            
+            ps.setString(1, he.hvsEstmID);
+            String err = "";
+            
+            try (ResultSet rs = ps.executeQuery()){
+                
+                while (rs.next()){
+                    
+                    String divID = FZUtil.getRsString(rs, 1, "-");
+                    String blockID = FZUtil.getRsString(rs, 2, "-");
+                    err = "Invalid block " + divID + "-" + blockID;
+                    break;
+                }
+            }
+            if (err.length() > 0) {
+                throw new Exception(err);
+            }
+        }
+    }
+
+    private void validateBlock(HvsEstm he) throws Exception {
+        
+        List<String> ss = new ArrayList<String>();
+        
+        for (HvsEstmDtl hed : he.dtl){
+            
+            hed.block = hed.block.trim().toUpperCase();
+            
+            if (ss.contains(hed.block)){
+                
+                throw new Exception("Duplicate block " + hed.block);
+            }
+            else {
+                ss.add(hed.block);
+            }
+        }
     }
 }
